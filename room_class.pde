@@ -5,22 +5,18 @@
 */
 float angle = 0f;
 int size = 200; 
-PShape cube;
-PVector pointA, pointB, pointC, pointD;
-PVector pointE, pointF, pointG, pointH;
-float c = 300;
+
+float c = 600;
 float camX = 0;
 float camZ = 0;
 float camY = 0;
 float theta = 0; 
-float zoom = 1000;
+float zoom = 1500;
 
 float r=0, g=0, b=0;
 
 PImage floorImage;
 PShader shaderTexture;
-
-PShape comp;
 
 PShader colorShader;
 PVector[] lightPos = { 
@@ -32,26 +28,37 @@ PVector[] lightColor = {
   new PVector(255, 100, 0),
   new PVector(255, 255, 255)
 };
+
+// ===========  FLOOR ======================
+PShape cubeFloor;
+PShape floorComp;
+PVector pointA, pointB, pointC, pointD;
+PVector pointE, pointF, pointG, pointH;
+// =========================================
+
 void setup() {
   size(600, 600, P3D);
   c = c/2;
   
-  pointA = new PVector( -c, -c, c);
-  pointB = new PVector( c, -c, c);
-  pointC = new PVector( c, c, c);
-  pointD = new PVector( -c, c, c);
+  float x = 600;
+  float y = 10;
+  float z = 400;
+  pointA = new PVector( -x, -y, z);
+  pointB = new PVector( x, -y, z);
+  pointC = new PVector( x, y, z);
+  pointD = new PVector( -x, y, z);
   
-  pointE = new PVector( -c, -c, -c);
-  pointF = new PVector( c, -c,-c);
-  pointG = new PVector( c, c,-c);
-  pointH = new PVector( -c, c,-c);
+  pointE = new PVector( -x, -y, -z);
+  pointF = new PVector( x, -y, -z);
+  pointG = new PVector( x, y, -z);
+  pointH = new PVector( -x, y, -z);
   
   floorImage = loadImage("floor.jpg");
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
   
   //cube = creerCube(100);
-  comp = creerComposite();
+  floorComp = creerComposite();
 }
 
 PShape creerComposite() {
@@ -275,7 +282,7 @@ PShape creerCube(int size) {
 
 PShape creerPointInFigure(PShape figure, PVector p, float u, float v){ 
   figure.vertex( p.x, p.y, p.z, u, v); 
-  return cube;
+  return cubeFloor;
 }
 
 boolean increment = true;
@@ -329,7 +336,7 @@ void draw() {
     0, 1, 0);
    
     //box(size);
-    shape(comp);
+    shape(floorComp);
   popMatrix();
   //angle += 0.01;
   /*if(size < 10) size = 200;
