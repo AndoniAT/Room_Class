@@ -3,6 +3,8 @@
   UNIVERSITÉ DU HAVRE, NORMANDIE
               2023
 */
+
+
 float angle = 0f;
 int size = 200; 
 
@@ -31,37 +33,35 @@ PVector[] lightColor = {
 
 // ===========  FLOOR ======================
 PShape cubeFloor;
-PShape floorComp;
-PVector pointA, pointB, pointC, pointD;
-PVector pointE, pointF, pointG, pointH;
+/*PVector pointA, pointB, pointC, pointD;
+PVector pointE, pointF, pointG, pointH;*/
 // =========================================
 
 void setup() {
   size(600, 600, P3D);
   c = c/2;
   
-  float x = 600;
-  float y = 10;
-  float z = 400;
-  pointA = new PVector( -x, -y, z);
-  pointB = new PVector( x, -y, z);
-  pointC = new PVector( x, y, z);
-  pointD = new PVector( -x, y, z);
-  
-  pointE = new PVector( -x, -y, -z);
-  pointF = new PVector( x, -y, -z);
-  pointG = new PVector( x, y, -z);
-  pointH = new PVector( -x, y, -z);
-  
   floorImage = loadImage("floor.jpg");
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
   
   //cube = creerCube(100);
-  floorComp = creerComposite();
 }
 
-PShape creerComposite() {
+
+PShape creerComposite(float x, float y, float z) {
+  
+  PVector pointA = new PVector( -x, -y, z);
+  PVector pointB = new PVector( x, -y, z);
+  PVector pointC = new PVector( x, y, z);
+  PVector pointD = new PVector( -x, y, z);
+   
+  PVector pointE = new PVector( -x, -y, -z);
+  PVector pointF = new PVector( x, -y, -z);
+  PVector pointG = new PVector( x, y, -z);
+  PVector pointH = new PVector( -x, y, -z);
+  ObjetTP obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);  
+  
   PShape group = createShape(GROUP);
     // Face 1
     PShape face_1 = createShape();
@@ -75,14 +75,14 @@ PShape creerComposite() {
     
     //face_1.stroke(0);
     
-    PVector PA_n = new PVector(pointA.x, pointA.y, pointA.z).normalize();
-    PVector PB_n = new PVector(pointB.x, pointB.y, pointB.z).normalize();
-    PVector PC_n = new PVector(pointC.x, pointC.y, pointC.z).normalize();
-    PVector PD_n = new PVector(pointD.x, pointD.y, pointD.z).normalize();
-    PVector PE_n = new PVector(pointE.x, pointE.y, pointE.z).normalize();
-    PVector PF_n = new PVector(pointF.x, pointF.y, pointF.z).normalize();
-    PVector PG_n = new PVector(pointG.x, pointG.y, pointG.z).normalize();
-    PVector PH_n = new PVector(pointH.x, pointH.y, pointH.z).normalize();
+    PVector PA_n = new PVector(obj.getpointA().x, obj.getpointA().y, obj.getpointA().z).normalize();
+    PVector PB_n = new PVector(obj.getpointB().x, obj.getpointB().y, obj.getpointB().z).normalize();
+    PVector PC_n = new PVector(obj.getpointC().x, obj.getpointC().y, obj.getpointC().z).normalize();
+    PVector PD_n = new PVector(obj.getpointD().x, obj.getpointD().y, obj.getpointD().z).normalize();
+    PVector PE_n = new PVector(obj.getpointE().x, obj.getpointE().y, obj.getpointE().z).normalize();
+    PVector PF_n = new PVector(obj.getpointF().x, obj.getpointF().y, obj.getpointF().z).normalize();
+    PVector PG_n = new PVector(obj.getpointG().x, obj.getpointG().y, obj.getpointG().z).normalize();
+    PVector PH_n = new PVector(obj.getpointH().x, obj.getpointH().y, obj.getpointH().z).normalize();
     
     //face_1.normal(0, 0, 1);
     face_1.normal(PA_n.x, PA_n.y, PA_n.z);
@@ -90,10 +90,10 @@ PShape creerComposite() {
     face_1.normal(PC_n.x, PC_n.y, PC_n.z);
     face_1.normal(PD_n.x, PD_n.y, PD_n.z);
     
-    creerPointInFigure(face_1, pointA, 0, 0); // A
-    creerPointInFigure(face_1, pointB, 1, 0); // B
-    creerPointInFigure(face_1, pointC, 1, 1); // C
-    creerPointInFigure(face_1, pointD, 0, 1); // D
+    creerPointInFigure(face_1, obj.getpointA(), 0, 0); // A
+    creerPointInFigure(face_1, obj.getpointB(), 1, 0); // B
+    creerPointInFigure(face_1, obj.getpointC(), 1, 1); // C
+    creerPointInFigure(face_1, obj.getpointD(), 0, 1); // D
     face_1.endShape(CLOSE);
     group.addChild(face_1);
     
@@ -113,10 +113,11 @@ PShape creerComposite() {
     face_2.normal(PB_n.x, PB_n.y, PB_n.z);
     
     //face_2.stroke(0);
-    creerPointInFigure(face_2, pointA, 0, 0); // A
-    creerPointInFigure(face_2, pointE, 1, 0); // E
-    creerPointInFigure(face_2, pointF, 1, 1); // F
-    creerPointInFigure(face_2, pointB, 0, 1); // B
+    creerPointInFigure(face_2, obj.getpointA(), 0, 0); // A
+    creerPointInFigure(face_2, obj.getpointE(), 1, 0); // E
+    creerPointInFigure(face_2, obj.getpointF(), 1, 1); // F
+    creerPointInFigure(face_2, obj.getpointB(), 0, 1); // B
+    
     face_2.endShape(CLOSE);
     group.addChild(face_2);
     
@@ -135,10 +136,10 @@ PShape creerComposite() {
     face_3.normal(PC_n.x, PC_n.y, PC_n.z);
     
     //face_3.stroke(0);
-    creerPointInFigure(face_3, pointD, 0, 0); // D
-    creerPointInFigure(face_3, pointH, 1, 0); // H
-    creerPointInFigure(face_3, pointG, 1, 1); // G
-    creerPointInFigure(face_3, pointC, 0, 1); // C
+    creerPointInFigure(face_3, obj.getpointD(), 0, 0); // D
+    creerPointInFigure(face_3, obj.getpointH(), 1, 0); // H
+    creerPointInFigure(face_3, obj.getpointG(), 1, 1); // G
+    creerPointInFigure(face_3, obj.getpointC(), 0, 1); // C
     face_3.endShape(CLOSE);
     group.addChild(face_3);
     
@@ -158,10 +159,10 @@ PShape creerComposite() {
     face_4.normal(PH_n.x, PH_n.y, PH_n.z);
     
     //face_4.stroke(0);
-    creerPointInFigure(face_4, pointE, 0, 0); // E
-    creerPointInFigure(face_4, pointF, 1, 0); // F
-    creerPointInFigure(face_4, pointG, 1, 1); // G
-    creerPointInFigure(face_4, pointH, 0, 1); // H
+    creerPointInFigure(face_4, obj.getpointE(), 0, 0); // E
+    creerPointInFigure(face_4, obj.getpointF(), 1, 0); // F
+    creerPointInFigure(face_4, obj.getpointG(), 1, 1); // G
+    creerPointInFigure(face_4, obj.getpointH(), 0, 1); // H
     face_4.endShape(CLOSE);
     group.addChild(face_4);
     
@@ -180,10 +181,10 @@ PShape creerComposite() {
     face_5.normal(PH_n.x, PH_n.y, PH_n.z);
     face_5.normal(PD_n.x, PD_n.y, PD_n.z);
     //face_5.stroke(0);
-     creerPointInFigure(face_5, pointA, 0, 0); // A
-    creerPointInFigure(face_5, pointE, 1, 0); // E
-    creerPointInFigure(face_5, pointH, 1, 1); // H
-    creerPointInFigure(face_5, pointD, 0, 1); // D
+     creerPointInFigure(face_5, obj.getpointA(), 0, 0); // A
+    creerPointInFigure(face_5, obj.getpointE(), 1, 0); // E
+    creerPointInFigure(face_5, obj.getpointH(), 1, 1); // H
+    creerPointInFigure(face_5, obj.getpointD(), 0, 1); // D
     face_5.endShape(CLOSE);
     group.addChild(face_5);
     
@@ -203,10 +204,10 @@ PShape creerComposite() {
     face_6.normal(PG_n.x, PG_n.y, PG_n.z);
     face_6.normal(PC_n.x, PC_n.y, PC_n.z);
     
-    creerPointInFigure(face_6, pointB, 0, 0); // B
-    creerPointInFigure(face_6, pointF, 1, 0); // F
-    creerPointInFigure(face_6, pointG, 1, 1); // G
-    creerPointInFigure(face_6, pointC, 0, 1); // C
+    creerPointInFigure(face_6, obj.getpointB(), 0, 0); // B
+    creerPointInFigure(face_6, obj.getpointF(), 1, 0); // F
+    creerPointInFigure(face_6, obj.getpointG(), 1, 1); // G
+    creerPointInFigure(face_6, obj.getpointC(), 0, 1); // C
     face_6.endShape(CLOSE);
     group.addChild(face_6);
     
@@ -215,7 +216,7 @@ PShape creerComposite() {
 }
 
 
-
+/*
 PShape creerCube(int size) {
   PShape cube = createShape();
   cube.beginShape(QUADS);
@@ -278,7 +279,7 @@ PShape creerCube(int size) {
   
   cube.endShape(CLOSE);
   return cube;
-}
+}*/
 
 PShape creerPointInFigure(PShape figure, PVector p, float u, float v){ 
   figure.vertex( p.x, p.y, p.z, u, v); 
@@ -287,6 +288,7 @@ PShape creerPointInFigure(PShape figure, PVector p, float u, float v){
 
 boolean increment = true;
 void draw() {
+  
   if(increment) {
     r++; g++; b++;
   } else {
@@ -336,6 +338,7 @@ void draw() {
     0, 1, 0);
    
     //box(size);
+    PShape floorComp = creerComposite(600, 10, 400);
     shape(floorComp);
   popMatrix();
   //angle += 0.01;
