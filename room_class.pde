@@ -17,7 +17,7 @@ float zoom = 1500;
 
 float r=0, g=0, b=0;
 
-PImage floorImage;
+PImage floorImage, tableImage;
 PShader shaderTexture;
 
 PShader colorShader;
@@ -27,8 +27,9 @@ PVector[] lightPos = {
 };
 
 PVector[] lightColor = {
-  new PVector(255, 100, 0),
+  new PVector(255, 255, 255),
   new PVector(255, 255, 255)
+  /*new PVector(255, 255, 255)*/
 };
 
 // ===========  FLOOR ======================
@@ -42,6 +43,7 @@ void setup() {
   c = c/2;
   
   floorImage = loadImage("floor.jpg");
+  tableImage = loadImage("table.jpg");
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
   
@@ -49,25 +51,14 @@ void setup() {
 }
 
 
-PShape creerComposite(float x, float y, float z) {
-  
-  PVector pointA = new PVector( -x, -y, z);
-  PVector pointB = new PVector( x, -y, z);
-  PVector pointC = new PVector( x, y, z);
-  PVector pointD = new PVector( -x, y, z);
-   
-  PVector pointE = new PVector( -x, -y, -z);
-  PVector pointF = new PVector( x, -y, -z);
-  PVector pointG = new PVector( x, y, -z);
-  PVector pointH = new PVector( -x, y, -z);
-  ObjetTP obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);  
+PShape creerComposite(float x, float y, float z, PImage img, int xx, int yy, ObjetTP obj) {
   
   PShape group = createShape(GROUP);
     // Face 1
     PShape face_1 = createShape();
     face_1.beginShape(QUADS);
     face_1.textureMode(NORMAL);
-    face_1.texture(floorImage);
+    face_1.texture(img);
     face_1.shininess(200);  
     face_1.emissive(0, 0, 0);
     face_1.specular(255, 255, 0);
@@ -90,17 +81,17 @@ PShape creerComposite(float x, float y, float z) {
     face_1.normal(PC_n.x, PC_n.y, PC_n.z);
     face_1.normal(PD_n.x, PD_n.y, PD_n.z);
     
-    creerPointInFigure(face_1, obj.getpointA(), 0, 0); // A
-    creerPointInFigure(face_1, obj.getpointB(), 1, 0); // B
-    creerPointInFigure(face_1, obj.getpointC(), 1, 1); // C
-    creerPointInFigure(face_1, obj.getpointD(), 0, 1); // D
+    creerPointInFigure(face_1, obj.getpointA(), xx, xx); // A
+    creerPointInFigure(face_1, obj.getpointB(), yy, xx); // B
+    creerPointInFigure(face_1, obj.getpointC(), yy, yy); // C
+    creerPointInFigure(face_1, obj.getpointD(), xx, yy); // D
     face_1.endShape(CLOSE);
     group.addChild(face_1);
     
     PShape face_2 = createShape();
     face_2.beginShape(QUADS);
     face_2.textureMode(NORMAL);
-    face_2.texture(floorImage);
+    face_2.texture(img);
     face_2.shininess(200.0);  
     face_2.emissive(0, 0, 0);
      face_2.specular(255, 255, 0);
@@ -113,10 +104,10 @@ PShape creerComposite(float x, float y, float z) {
     face_2.normal(PB_n.x, PB_n.y, PB_n.z);
     
     //face_2.stroke(0);
-    creerPointInFigure(face_2, obj.getpointA(), 0, 0); // A
-    creerPointInFigure(face_2, obj.getpointE(), 1, 0); // E
-    creerPointInFigure(face_2, obj.getpointF(), 1, 1); // F
-    creerPointInFigure(face_2, obj.getpointB(), 0, 1); // B
+    creerPointInFigure(face_2, obj.getpointA(), xx, xx); // A
+    creerPointInFigure(face_2, obj.getpointE(), yy, xx); // E
+    creerPointInFigure(face_2, obj.getpointF(), yy, yy); // F
+    creerPointInFigure(face_2, obj.getpointB(), xx, yy); // B
     
     face_2.endShape(CLOSE);
     group.addChild(face_2);
@@ -124,7 +115,7 @@ PShape creerComposite(float x, float y, float z) {
     PShape face_3 = createShape();
     face_3.beginShape(QUADS);
     face_3.textureMode(NORMAL);
-    face_3.texture(floorImage);
+    face_3.texture(img);
     face_3.shininess(200.0);  
     face_3.emissive(0, 0, 0);
     face_3.specular(255, 255, 0);
@@ -136,17 +127,17 @@ PShape creerComposite(float x, float y, float z) {
     face_3.normal(PC_n.x, PC_n.y, PC_n.z);
     
     //face_3.stroke(0);
-    creerPointInFigure(face_3, obj.getpointD(), 0, 0); // D
-    creerPointInFigure(face_3, obj.getpointH(), 1, 0); // H
-    creerPointInFigure(face_3, obj.getpointG(), 1, 1); // G
-    creerPointInFigure(face_3, obj.getpointC(), 0, 1); // C
+    creerPointInFigure(face_3, obj.getpointD(), xx, xx); // D
+    creerPointInFigure(face_3, obj.getpointH(), yy, xx); // H
+    creerPointInFigure(face_3, obj.getpointG(), yy, yy); // G
+    creerPointInFigure(face_3, obj.getpointC(), xx, yy); // C
     face_3.endShape(CLOSE);
     group.addChild(face_3);
     
     PShape face_4 = createShape();
     face_4.beginShape(QUADS);
     face_4.textureMode(NORMAL);
-    face_4.texture(floorImage);
+    face_4.texture(img);
     face_4.shininess(200.0);  
     face_4.emissive(0, 0, 0);
      face_4.specular(255, 255, 0);
@@ -159,17 +150,17 @@ PShape creerComposite(float x, float y, float z) {
     face_4.normal(PH_n.x, PH_n.y, PH_n.z);
     
     //face_4.stroke(0);
-    creerPointInFigure(face_4, obj.getpointE(), 0, 0); // E
-    creerPointInFigure(face_4, obj.getpointF(), 1, 0); // F
-    creerPointInFigure(face_4, obj.getpointG(), 1, 1); // G
-    creerPointInFigure(face_4, obj.getpointH(), 0, 1); // H
+    creerPointInFigure(face_4, obj.getpointE(), xx, xx); // E
+    creerPointInFigure(face_4, obj.getpointF(), yy,xx); // F
+    creerPointInFigure(face_4, obj.getpointG(), yy, yy); // G
+    creerPointInFigure(face_4, obj.getpointH(), xx, yy); // H
     face_4.endShape(CLOSE);
     group.addChild(face_4);
     
     PShape face_5 = createShape();
     face_5.beginShape(QUADS);
     face_5.textureMode(NORMAL);
-    face_5.texture(floorImage);
+    face_5.texture(img);
     face_5.shininess(200);  
     face_5.emissive(0, 0, 0);
     face_5.specular(255, 255, 0);
@@ -181,17 +172,17 @@ PShape creerComposite(float x, float y, float z) {
     face_5.normal(PH_n.x, PH_n.y, PH_n.z);
     face_5.normal(PD_n.x, PD_n.y, PD_n.z);
     //face_5.stroke(0);
-     creerPointInFigure(face_5, obj.getpointA(), 0, 0); // A
-    creerPointInFigure(face_5, obj.getpointE(), 1, 0); // E
-    creerPointInFigure(face_5, obj.getpointH(), 1, 1); // H
-    creerPointInFigure(face_5, obj.getpointD(), 0, 1); // D
+     creerPointInFigure(face_5, obj.getpointA(), xx, xx); // A
+    creerPointInFigure(face_5, obj.getpointE(), yy, xx); // E
+    creerPointInFigure(face_5, obj.getpointH(), yy, yy); // H
+    creerPointInFigure(face_5, obj.getpointD(), xx, yy); // D
     face_5.endShape(CLOSE);
     group.addChild(face_5);
     
     PShape face_6 = createShape();
     face_6.beginShape(QUADS);
     face_6.textureMode(NORMAL);
-    face_6.texture(floorImage);
+    face_6.texture(img);
     face_6.shininess(200.0);  
     face_6.emissive(0, 0, 0);
      face_6.specular(255, 255, 0);
@@ -204,10 +195,10 @@ PShape creerComposite(float x, float y, float z) {
     face_6.normal(PG_n.x, PG_n.y, PG_n.z);
     face_6.normal(PC_n.x, PC_n.y, PC_n.z);
     
-    creerPointInFigure(face_6, obj.getpointB(), 0, 0); // B
-    creerPointInFigure(face_6, obj.getpointF(), 1, 0); // F
-    creerPointInFigure(face_6, obj.getpointG(), 1, 1); // G
-    creerPointInFigure(face_6, obj.getpointC(), 0, 1); // C
+    creerPointInFigure(face_6, obj.getpointB(), xx, xx); // B
+    creerPointInFigure(face_6, obj.getpointF(), yy, xx); // F
+    creerPointInFigure(face_6, obj.getpointG(), yy, yy); // G
+    creerPointInFigure(face_6, obj.getpointC(), xx, yy); // C
     face_6.endShape(CLOSE);
     group.addChild(face_6);
     
@@ -215,6 +206,161 @@ PShape creerComposite(float x, float y, float z) {
     
 }
 
+
+PShape creerTable(float x, float y, float z, PImage img, int xx, int yy, ObjetTP obj) {
+  
+  PShape group = createShape(GROUP);
+    // Face 1
+    PShape face_1 = createShape();
+    face_1.beginShape(QUADS);
+    face_1.textureMode(NORMAL);
+    face_1.texture(img);
+    face_1.shininess(200);  
+    face_1.emissive(0, 0, 0);
+    face_1.specular(255, 255, 0);
+    face_1.ambient(255, 255, 255);
+    
+    //face_1.stroke(0);
+    
+    PVector PA_n = new PVector(obj.getpointA().x, obj.getpointA().y, obj.getpointA().z).normalize();
+    PVector PB_n = new PVector(obj.getpointB().x, obj.getpointB().y, obj.getpointB().z).normalize();
+    PVector PC_n = new PVector(obj.getpointC().x, obj.getpointC().y, obj.getpointC().z).normalize();
+    PVector PD_n = new PVector(obj.getpointD().x, obj.getpointD().y, obj.getpointD().z).normalize();
+    PVector PE_n = new PVector(obj.getpointE().x, obj.getpointE().y, obj.getpointE().z).normalize();
+    PVector PF_n = new PVector(obj.getpointF().x, obj.getpointF().y, obj.getpointF().z).normalize();
+    PVector PG_n = new PVector(obj.getpointG().x, obj.getpointG().y, obj.getpointG().z).normalize();
+    PVector PH_n = new PVector(obj.getpointH().x, obj.getpointH().y, obj.getpointH().z).normalize();
+    
+    //face_1.normal(0, 0, 1);
+    face_1.normal(PA_n.x, PA_n.y, PA_n.z);
+    face_1.normal(PB_n.x, PB_n.y, PB_n.z);
+    face_1.normal(PC_n.x, PC_n.y, PC_n.z);
+    face_1.normal(PD_n.x, PD_n.y, PD_n.z);
+    
+    creerPointInFigure(face_1, obj.getpointA(), xx, xx); // A
+    creerPointInFigure(face_1, obj.getpointB(), yy, xx); // B
+    creerPointInFigure(face_1, obj.getpointC(), yy, yy); // C
+    creerPointInFigure(face_1, obj.getpointD(), xx, yy); // D
+    face_1.endShape(CLOSE);
+    group.addChild(face_1);
+    
+    PShape face_2 = createShape();
+    face_2.beginShape(QUADS);
+    face_2.textureMode(NORMAL);
+    face_2.texture(img);
+    face_2.shininess(200.0);  
+    face_2.emissive(0, 0, 0);
+     face_2.specular(255, 255, 0);
+    face_2.ambient(255, 255, 255);
+    //face_2.normal(0, 0, 1);
+    
+    face_2.normal(PA_n.x, PA_n.y, PA_n.z);
+    face_2.normal(PE_n.x, PE_n.y, PE_n.z);
+    face_2.normal(PF_n.x, PF_n.y, PF_n.z);
+    face_2.normal(PB_n.x, PB_n.y, PB_n.z);
+    
+    //face_2.stroke(0);
+    creerPointInFigure(face_2, obj.getpointA(), xx, xx); // A
+    creerPointInFigure(face_2, obj.getpointE(), yy, xx); // E
+    creerPointInFigure(face_2, obj.getpointF(), yy, yy); // F
+    creerPointInFigure(face_2, obj.getpointB(), xx, yy); // B
+    
+    face_2.endShape(CLOSE);
+    group.addChild(face_2);
+    
+    PShape face_3 = createShape();
+    face_3.beginShape(QUADS);
+    face_3.textureMode(NORMAL);
+    face_3.texture(img);
+    face_3.shininess(200.0);  
+    face_3.emissive(0, 0, 0);
+    face_3.specular(255, 255, 0);
+    face_3.ambient(255, 255, 255);
+    //face_3.normal(0, 0, 1);
+    face_3.normal(PD_n.x, PD_n.y, PD_n.z);
+    face_3.normal(PH_n.x, PH_n.y, PH_n.z);
+    face_3.normal(PG_n.x, PG_n.y, PG_n.z);
+    face_3.normal(PC_n.x, PC_n.y, PC_n.z);
+    
+    //face_3.stroke(0);
+    creerPointInFigure(face_3, obj.getpointD(), xx, xx); // D
+    creerPointInFigure(face_3, obj.getpointH(), yy, xx); // H
+    creerPointInFigure(face_3, obj.getpointG(), yy, yy); // G
+    creerPointInFigure(face_3, obj.getpointC(), xx, yy); // C
+    face_3.endShape(CLOSE);
+    group.addChild(face_3);
+    
+    PShape face_4 = createShape();
+    face_4.beginShape(QUADS);
+    face_4.textureMode(NORMAL);
+    face_4.texture(img);
+    face_4.shininess(200.0);  
+    face_4.emissive(0, 0, 0);
+     face_4.specular(255, 255, 0);
+    face_4.ambient(255, 255, 255);
+    
+    //face_4.normal(0, 0, 1);
+    face_4.normal(PE_n.x, PE_n.y, PE_n.z);
+    face_4.normal(PF_n.x, PF_n.y, PF_n.z);
+    face_4.normal(PG_n.x, PG_n.y, PG_n.z);
+    face_4.normal(PH_n.x, PH_n.y, PH_n.z);
+    
+    //face_4.stroke(0);
+    creerPointInFigure(face_4, obj.getpointE(), xx, xx); // E
+    creerPointInFigure(face_4, obj.getpointF(), yy,xx); // F
+    creerPointInFigure(face_4, obj.getpointG(), yy, yy); // G
+    creerPointInFigure(face_4, obj.getpointH(), xx, yy); // H
+    face_4.endShape(CLOSE);
+    group.addChild(face_4);
+    
+    PShape face_5 = createShape();
+    face_5.beginShape(QUADS);
+    face_5.textureMode(NORMAL);
+    face_5.texture(img);
+    face_5.shininess(200);  
+    face_5.emissive(0, 0, 0);
+    face_5.specular(255, 255, 0);
+    face_5.ambient(255, 255, 255);
+    face_5.normal(0, 0, 1);
+    
+    face_5.normal(PA_n.x, PA_n.y, PA_n.z);
+    face_5.normal(PE_n.x, PE_n.y, PE_n.z);
+    face_5.normal(PH_n.x, PH_n.y, PH_n.z);
+    face_5.normal(PD_n.x, PD_n.y, PD_n.z);
+    //face_5.stroke(0);
+     creerPointInFigure(face_5, obj.getpointA(), xx, xx); // A
+    creerPointInFigure(face_5, obj.getpointE(), yy, xx); // E
+    creerPointInFigure(face_5, obj.getpointH(), yy, yy); // H
+    creerPointInFigure(face_5, obj.getpointD(), xx, yy); // D
+    face_5.endShape(CLOSE);
+    group.addChild(face_5);
+    
+    PShape face_6 = createShape();
+    face_6.beginShape(QUADS);
+    face_6.textureMode(NORMAL);
+    face_6.texture(img);
+    face_6.shininess(200.0);  
+    face_6.emissive(0, 0, 0);
+     face_6.specular(255, 255, 0);
+    face_6.ambient(255, 255, 255);
+    //face_6.normal(0, 0, 1);
+    //face_6.stroke(0);
+    
+    face_6.normal(PB_n.x, PB_n.y, PB_n.z);
+    face_6.normal(PF_n.x, PF_n.y, PF_n.z);
+    face_6.normal(PG_n.x, PG_n.y, PG_n.z);
+    face_6.normal(PC_n.x, PC_n.y, PC_n.z);
+    
+    creerPointInFigure(face_6, obj.getpointB(), xx, xx); // B
+    creerPointInFigure(face_6, obj.getpointF(), yy, xx); // F
+    creerPointInFigure(face_6, obj.getpointG(), yy, yy); // G
+    creerPointInFigure(face_6, obj.getpointC(), xx, yy); // C
+    face_6.endShape(CLOSE);
+    group.addChild(face_6);
+    
+    return group;
+    
+}
 
 /*
 PShape creerCube(int size) {
@@ -281,19 +427,101 @@ PShape creerCube(int size) {
   return cube;
 }*/
 
-PShape creerPointInFigure(PShape figure, PVector p, float u, float v){ 
+void creerPointInFigure(PShape figure, PVector p, float u, float v){ 
   figure.vertex( p.x, p.y, p.z, u, v); 
-  return cubeFloor;
+  return;
 }
 
 boolean increment = true;
 void draw() {
+  int x = 600, y = 10, z = 400;
+  
+  PVector pointA = new PVector( -x, -y, z);
+  PVector pointB = new PVector( x, -y, z);
+  PVector pointC = new PVector( x, y, z);
+  PVector pointD = new PVector( -x, y, z);
+  
+  PVector pointE = new PVector( -x, -y, -z);
+  PVector pointF = new PVector( x, -y, -z);
+  PVector pointG = new PVector( x, y, -z);
+  PVector pointH = new PVector( -x, y, -z);
+  ObjetTP obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+  PShape floorComp = creerComposite(600, 10, 400, floorImage, 0, 1, obj);
+  
+  int x2 = 100, y2 = 14, z2 = 40;
+  int diff = 100;
+  pointA = new PVector( -x2 - (x/2), -y -diff - y2, z2);
+  pointB = new PVector( x2  - (x/2), -y -diff - y2, z2);
+  pointC = new PVector( x2  - (x/2), -y -diff, z2);
+  pointD = new PVector( -x2 - (x/2), -y -diff, z2);
+   
+  pointE = new PVector( -x2 - (x/2), -y -diff - y2, -z);
+  pointF = new PVector( x2  - (x/2), -y -diff - y2, -z);
+  pointG = new PVector( x2  - (x/2), -y -diff, -z);
+  pointH = new PVector( -x2 - (x/2), -y -diff, -z);
+  ObjetTP obj2 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+  
+  PShape table = creerTable(200, 20, 200, tableImage, 7, 10, obj2);
+  
+  pointA = new PVector( -(x/2) -x2       , -y-diff, 40);
+  pointB = new PVector( -(x/2) -x2   + 25, -y-diff, 40);
+  pointC = new PVector( -(x/2) -x2   + 25, -y, 40);
+  pointD = new PVector( -(x/2) -x2       , -y, 40);
+   
+  pointE = new PVector( -(x/2) -x2       , -y-diff, 20);
+  pointF = new PVector( -(x/2) -x2   + 25, -y-diff, 20);
+  pointG = new PVector( -(x/2) -x2   + 25, -y, 20);
+  pointH = new PVector( -(x/2) -x2       , -y, 20);
+  ObjetTP obj3 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+  
+  PShape p1 = creerTable(200, 20, 200, tableImage, 7, 10, obj3);
+  
+  pointA = new PVector( -(x/2) -x2       , -y-diff, -400);
+  pointB = new PVector( -(x/2) -x2   + 25, -y-diff, -400);
+  pointC = new PVector( -(x/2) -x2   + 25, -y, -400);
+  pointD = new PVector( -(x/2) -x2       , -y, -400);
+   
+  pointE = new PVector( -(x/2) -x2       , -y-diff, -380);
+  pointF = new PVector( -(x/2) -x2   + 25, -y-diff, -380);
+  pointG = new PVector( -(x/2) -x2   + 25, -y, -380);
+  pointH = new PVector( -(x/2) -x2       , -y, -380);
+  ObjetTP obj4 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+  
+  PShape p2 = creerTable(200, 20, 200, tableImage, 7, 10, obj4);
+  
+  pointA = new PVector( -(x/2) +x2       , -y-diff, 40);
+  pointB = new PVector( -(x/2) +x2   - 25, -y-diff, 40);
+  pointC = new PVector( -(x/2) +x2   - 25, -y, 40);
+  pointD = new PVector( -(x/2) +x2       , -y, 40);
+   
+  pointE = new PVector( -(x/2) +x2       , -y-diff, 20);
+  pointF = new PVector( -(x/2) +x2   - 25, -y-diff, 20);
+  pointG = new PVector( -(x/2) +x2   - 25, -y, 20);
+  pointH = new PVector( -(x/2) +x2       , -y, 20);
+  ObjetTP obj5 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+  
+  PShape p3 = creerTable(200, 20, 200, tableImage, 7, 10, obj5);
+  
+  pointA = new PVector( -(x/2) +x2       , -y-diff, -400);
+  pointB = new PVector( -(x/2) +x2   - 25, -y-diff, -400);
+  pointC = new PVector( -(x/2) +x2   - 25, -y, -400);
+  pointD = new PVector( -(x/2) +x2       , -y, -400);
+   
+  pointE = new PVector( -(x/2) +x2       , -y-diff, -380);
+  pointF = new PVector( -(x/2) +x2   - 25, -y-diff, -380);
+  pointG = new PVector( -(x/2) +x2   - 25, -y, -380);
+  pointH = new PVector( -(x/2) +x2       , -y, -380);
+  ObjetTP obj6 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+  
+  PShape p4 = creerTable(200, 20, 200, tableImage, 7, 10, obj6);
+  
   
   if(increment) {
     r++; g++; b++;
   } else {
     r--; g--; b--;
   }
+  
   if(r == 255) increment = false;
   if(r == 0 ) increment = true;
   
@@ -338,8 +566,14 @@ void draw() {
     0, 1, 0);
    
     //box(size);
-    PShape floorComp = creerComposite(600, 10, 400);
+    
     shape(floorComp);
+    
+    shape(table);
+    shape(p1);
+    shape(p2);
+    shape(p3);
+    shape(p4);
   popMatrix();
   //angle += 0.01;
   /*if(size < 10) size = 200;
