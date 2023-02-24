@@ -42,7 +42,7 @@ void setup() {
   size(600, 600, P3D);
   c = c/2;
   
-  floorImage = loadImage("floor.jpg");
+  floorImage = loadImage("floor.JPG");
   tableImage = loadImage("table.jpg");
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
@@ -204,6 +204,103 @@ PShape creerComposite(float x, float y, float z, PImage img, int xx, int yy, Obj
     
     return group;
     
+}
+
+PShape[] createElementsTable(int x, int y, int z) {
+  PShape[] tab = new PShape[10]; // tableau initial avec une taille de 10
+  ObjetTP obj;
+  int largeurMoitieTable = 100, y2 = 14, z2 = 40;
+  int diff = 100;
+  PVector pointA = new PVector( -largeurMoitieTable - (x/2), -y -diff - y2, z2);
+  PVector pointB = new PVector( largeurMoitieTable  - (x/2), -y -diff - y2, z2);
+  PVector pointC = new PVector( largeurMoitieTable  - (x/2), -y -diff, z2);
+  PVector pointD = new PVector( -largeurMoitieTable - (x/2), -y -diff, z2);
+   
+  PVector pointE = new PVector( -largeurMoitieTable - (x/2), -y -diff - y2, -z);
+  PVector pointF = new PVector( largeurMoitieTable  - (x/2), -y -diff - y2, -z);
+  PVector pointG = new PVector( largeurMoitieTable  - (x/2), -y -diff, -z);
+  PVector pointH = new PVector( -largeurMoitieTable - (x/2), -y -diff, -z);
+  obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+  tab = (PShape[]) append(tab, creerTable(200, 20, 200, tableImage, 7, 10, obj));
+  
+  // Pied 1
+  int count = 0;
+  
+  int xPied1 = largeurMoitieTable, xPied2 = 25, zPied = z2, zinc = 20; 
+  do {
+    pointA = new PVector( -(x/2) -xPied1             , -y-diff , zPied);
+    pointB = new PVector( -(x/2) -xPied1   + xPied2  , -y-diff , zPied);
+    pointC = new PVector( -(x/2) -xPied1   + xPied2  , -y      , zPied);
+    pointD = new PVector( -(x/2) -xPied1             , -y      , zPied);
+     
+    pointE = new PVector( -(x/2) -xPied1             , -y-diff , zPied- zinc);
+    pointF = new PVector( -(x/2) -xPied1   + xPied2  , -y-diff , zPied- zinc);
+    pointG = new PVector( -(x/2) -xPied1   + xPied2  , -y      , zPied- zinc);
+    pointH = new PVector( -(x/2) -xPied1             , -y      , zPied- zinc);
+    obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+    tab = (PShape[]) append(tab, creerTable(200, 20, 200, tableImage, 7, 10, obj));
+    count++;
+    xPied1 = -xPied1;  // 100 to -100
+    xPied2 = -xPied2;  // 25 to -25
+    if(count == 2) { 
+      zPied = -z;
+      zinc = -zinc;
+    }
+    
+  } while(count < 2);
+  
+  
+  int profTot = z;
+  
+  // Chairs
+  int prof = profTot - 40;
+  int x3 = 140, i=0;
+  do {
+    pointA = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2) - y2 , -prof);
+    pointB = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2) - y2 , -prof);
+    pointC = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2)      , -prof);
+    pointD = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2)      , -prof);
+     
+    pointE = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2) - y2 , -prof+90);
+    pointF = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2) - y2 , -prof+90);
+    pointG = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2)      , -prof+90);
+    pointH = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2)      , -prof+90);
+    obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+    
+    tab = (PShape[]) append(tab, creerTable(200, 20, 200, floorImage, 7, 10, obj));
+    
+    count = 0;
+      for(int j = 1 ; j <= 4 ; j++)
+          if(j == 0) {
+              xPied1 = x3     ; xPied2 = 50  ;  zPied = -prof + 90 ; zinc = 5;
+          } else if(j == 1) {
+              xPied1 = x3+100 ; xPied2 = -50 ; zPied = -prof + 90 ; zinc = 5;
+          } else if(j == 2) {
+              xPied1 = x3 ; xPied2 = 50 ; zPied = -prof + 10 ; zinc = 5;            
+          }
+          
+          pointA = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y - (diff/2) , zPied);
+          pointB = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y - (diff/2) , zPied);
+          pointC = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y            , zPied);
+          pointD = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y            , zPied);
+       
+          pointE = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y - (diff/2) , zPied- zinc);
+          pointF = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y - (diff/2) , zPied- zinc);
+          pointG = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y            , zPied- zinc);
+          pointH = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y            , zPied- zinc);
+          
+          obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+          tab = (PShape[]) append(tab, creerTable(200, 20, 200, tableImage, 7, 10, obj));
+          j++;
+  }
+    
+    
+    i++;
+    prof = prof - 140;
+  } while(i<4);
+  
+  
+  return tab;
 }
 
 
@@ -434,7 +531,7 @@ void creerPointInFigure(PShape figure, PVector p, float u, float v){
 
 boolean increment = true;
 void draw() {
-  int x = 600, y = 10, z = 400;
+  int x = 600, y = 10, z = 600;
   
   PVector pointA = new PVector( -x, -y, z);
   PVector pointB = new PVector( x, -y, z);
@@ -448,73 +545,7 @@ void draw() {
   ObjetTP obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
   PShape floorComp = creerComposite(600, 10, 400, floorImage, 0, 1, obj);
   
-  int x2 = 100, y2 = 14, z2 = 40;
-  int diff = 100;
-  pointA = new PVector( -x2 - (x/2), -y -diff - y2, z2);
-  pointB = new PVector( x2  - (x/2), -y -diff - y2, z2);
-  pointC = new PVector( x2  - (x/2), -y -diff, z2);
-  pointD = new PVector( -x2 - (x/2), -y -diff, z2);
-   
-  pointE = new PVector( -x2 - (x/2), -y -diff - y2, -z);
-  pointF = new PVector( x2  - (x/2), -y -diff - y2, -z);
-  pointG = new PVector( x2  - (x/2), -y -diff, -z);
-  pointH = new PVector( -x2 - (x/2), -y -diff, -z);
-  ObjetTP obj2 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-  
-  PShape table = creerTable(200, 20, 200, tableImage, 7, 10, obj2);
-  
-  pointA = new PVector( -(x/2) -x2       , -y-diff, 40);
-  pointB = new PVector( -(x/2) -x2   + 25, -y-diff, 40);
-  pointC = new PVector( -(x/2) -x2   + 25, -y, 40);
-  pointD = new PVector( -(x/2) -x2       , -y, 40);
-   
-  pointE = new PVector( -(x/2) -x2       , -y-diff, 20);
-  pointF = new PVector( -(x/2) -x2   + 25, -y-diff, 20);
-  pointG = new PVector( -(x/2) -x2   + 25, -y, 20);
-  pointH = new PVector( -(x/2) -x2       , -y, 20);
-  ObjetTP obj3 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-  
-  PShape p1 = creerTable(200, 20, 200, tableImage, 7, 10, obj3);
-  
-  pointA = new PVector( -(x/2) -x2       , -y-diff, -400);
-  pointB = new PVector( -(x/2) -x2   + 25, -y-diff, -400);
-  pointC = new PVector( -(x/2) -x2   + 25, -y, -400);
-  pointD = new PVector( -(x/2) -x2       , -y, -400);
-   
-  pointE = new PVector( -(x/2) -x2       , -y-diff, -380);
-  pointF = new PVector( -(x/2) -x2   + 25, -y-diff, -380);
-  pointG = new PVector( -(x/2) -x2   + 25, -y, -380);
-  pointH = new PVector( -(x/2) -x2       , -y, -380);
-  ObjetTP obj4 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-  
-  PShape p2 = creerTable(200, 20, 200, tableImage, 7, 10, obj4);
-  
-  pointA = new PVector( -(x/2) +x2       , -y-diff, 40);
-  pointB = new PVector( -(x/2) +x2   - 25, -y-diff, 40);
-  pointC = new PVector( -(x/2) +x2   - 25, -y, 40);
-  pointD = new PVector( -(x/2) +x2       , -y, 40);
-   
-  pointE = new PVector( -(x/2) +x2       , -y-diff, 20);
-  pointF = new PVector( -(x/2) +x2   - 25, -y-diff, 20);
-  pointG = new PVector( -(x/2) +x2   - 25, -y, 20);
-  pointH = new PVector( -(x/2) +x2       , -y, 20);
-  ObjetTP obj5 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-  
-  PShape p3 = creerTable(200, 20, 200, tableImage, 7, 10, obj5);
-  
-  pointA = new PVector( -(x/2) +x2       , -y-diff, -400);
-  pointB = new PVector( -(x/2) +x2   - 25, -y-diff, -400);
-  pointC = new PVector( -(x/2) +x2   - 25, -y, -400);
-  pointD = new PVector( -(x/2) +x2       , -y, -400);
-   
-  pointE = new PVector( -(x/2) +x2       , -y-diff, -380);
-  pointF = new PVector( -(x/2) +x2   - 25, -y-diff, -380);
-  pointG = new PVector( -(x/2) +x2   - 25, -y, -380);
-  pointH = new PVector( -(x/2) +x2       , -y, -380);
-  ObjetTP obj6 = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-  
-  PShape p4 = creerTable(200, 20, 200, tableImage, 7, 10, obj6);
-  
+  PShape[] tab = createElementsTable(x, y, z);
   
   if(increment) {
     r++; g++; b++;
@@ -569,11 +600,12 @@ void draw() {
     
     shape(floorComp);
     
-    shape(table);
-    shape(p1);
-    shape(p2);
-    shape(p3);
-    shape(p4);
+    for(int i = 0; i < tab.length; i++) {
+        if (tab[i] != null) {
+          shape(tab[i]);
+        }  
+    }
+  
   popMatrix();
   //angle += 0.01;
   /*if(size < 10) size = 200;
