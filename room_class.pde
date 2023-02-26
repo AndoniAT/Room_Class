@@ -42,7 +42,7 @@ void setup() {
   size(600, 600, P3D);
   c = c/2;
   chairImage = loadImage("chair.jpg");
-  floorImage = loadImage("u.JPG");
+  floorImage = loadImage("floor.JPG");
   tableImage = loadImage("table.jpg");
   floorImage1 = loadImage("floor1.JPG");
   keyboard = loadImage("keyboard.JPG");
