@@ -17,7 +17,7 @@ float zoom = 1500;
 
 float r=0, g=0, b=0;
 
-PImage floorImage, tableImage;
+PImage floorImage, tableImage, chairImage, floorImage1, keyboard, ubuntuImage;
 PShader shaderTexture;
 
 PShader colorShader;
@@ -41,9 +41,16 @@ PVector pointE, pointF, pointG, pointH;*/
 void setup() {
   size(600, 600, P3D);
   c = c/2;
-  
-  floorImage = loadImage("floor.JPG");
+  chairImage = loadImage("chair.jpg");
+  floorImage = loadImage("u.JPG");
   tableImage = loadImage("table.jpg");
+  floorImage1 = loadImage("floor1.JPG");
+  keyboard = loadImage("keyboard.JPG");
+  ubuntuImage = loadImage("u.JPG");
+  /*ubuntuImage.resize(1, 1);
+  ubuntuImage.save("ub.jpg");*/
+
+
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
   
@@ -51,7 +58,7 @@ void setup() {
 }
 
 
-PShape creerComposite(float x, float y, float z, PImage img, int xx, int yy, ObjetTP obj) {
+PShape creerComposite(PImage img, int xx, int yy, ObjetTP obj) {
   
   PShape group = createShape(GROUP);
     // Face 1
@@ -208,76 +215,175 @@ PShape creerComposite(float x, float y, float z, PImage img, int xx, int yy, Obj
 
 PShape[] createElementsTable(int x, int y, int z) {
   PShape[] tab = new PShape[10]; // tableau initial avec une taille de 10
+  int[] defColors = new int[3];
+  defColors[0] = 255;
+  defColors[1] = 255;
+  defColors[2] = 255;
+
   ObjetTP obj;
-  int largeurMoitieTable = 100, y2 = 14, z2 = 40;
+  int largeurMoitieTable = 100, grossTable = 14, z2 = 40;
   int diff = 100;
-  PVector pointA = new PVector( -largeurMoitieTable - (x/2), -y -diff - y2, z2);
-  PVector pointB = new PVector( largeurMoitieTable  - (x/2), -y -diff - y2, z2);
-  PVector pointC = new PVector( largeurMoitieTable  - (x/2), -y -diff, z2);
-  PVector pointD = new PVector( -largeurMoitieTable - (x/2), -y -diff, z2);
-   
-  PVector pointE = new PVector( -largeurMoitieTable - (x/2), -y -diff - y2, -z);
-  PVector pointF = new PVector( largeurMoitieTable  - (x/2), -y -diff - y2, -z);
-  PVector pointG = new PVector( largeurMoitieTable  - (x/2), -y -diff, -z);
-  PVector pointH = new PVector( -largeurMoitieTable - (x/2), -y -diff, -z);
-  obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-  tab = (PShape[]) append(tab, creerTable(200, 20, 200, tableImage, 7, 10, obj));
   
-  // Pied 1
-  int count = 0;
+  int xPiedADEH = -largeurMoitieTable - (x/2); int xBCFG = largeurMoitieTable  - (x/2);  
+  int yABEF = -y -diff - grossTable;           int yCDGH = -y -diff;
+  int profABCD = z2;                        int profEFGH = -z;
+  obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+  obj.setImageFace(floorImage);   obj.setImageUp(tableImage);     obj.setImageDown(floorImage);
   
-  int xPied1 = largeurMoitieTable, xPied2 = 25, zPied = z2, zinc = 20; 
-  do {
-    pointA = new PVector( -(x/2) -xPied1             , -y-diff , zPied);
-    pointB = new PVector( -(x/2) -xPied1   + xPied2  , -y-diff , zPied);
-    pointC = new PVector( -(x/2) -xPied1   + xPied2  , -y      , zPied);
-    pointD = new PVector( -(x/2) -xPied1             , -y      , zPied);
-     
-    pointE = new PVector( -(x/2) -xPied1             , -y-diff , zPied- zinc);
-    pointF = new PVector( -(x/2) -xPied1   + xPied2  , -y-diff , zPied- zinc);
-    pointG = new PVector( -(x/2) -xPied1   + xPied2  , -y      , zPied- zinc);
-    pointH = new PVector( -(x/2) -xPied1             , -y      , zPied- zinc);
-    obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-    tab = (PShape[]) append(tab, creerTable(200, 20, 200, tableImage, 7, 10, obj));
-    count++;
-    xPied1 = -xPied1;  // 100 to -100
-    xPied2 = -xPied2;  // 25 to -25
-    if(count == 2) { 
-      zPied = -z;
-      zinc = -zinc;
-    }
+  obj.setImageGauche(floorImage); obj.setImageDroite(floorImage); obj.setImageDerriere(floorImage);
+  tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+  
+  // == Pieds Table ==
+  int xPied1 = largeurMoitieTable, xPied2 = 25, zPied = z2, zinc = 20;
+  for(int j = 1; j <= 4; j++) {    
+    if(j == 1 || j == 3) { xPied1 = largeurMoitieTable; xPied2 = 25;   }
+    if(j == 2 || j == 4) { xPied1 = -largeurMoitieTable; xPied2 = -25; }
+    if(j == 1 || j == 2) { zPied = z2; zinc = 20;  }
+    if(j == 3 || j == 4) { zPied = -z; zinc = -20; }
+    xPiedADEH = -(x/2) -xPied1;  xBCFG = xPiedADEH + xPied2;  
+    yABEF = -y-diff;             yCDGH = -y;                  
+    profABCD = zPied;            profEFGH = profABCD - zinc;  
+    obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
     
-  } while(count < 2);
+    //obj = new ObjetTP("pied", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+    obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+    tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+  }
+  
+  int prof = -10;
+  // ==== PCs ====
+  
+  // KEYBOARDS
+  for(int i = 1 ; i <= 4 ; i++) {
+    int x3 = 40;
+    if(i > 1) prof -= 150;
+    zinc = 100;
+     
+    xPiedADEH = -(x/2) + largeurMoitieTable   - x3;   xBCFG = -(x/2) + largeurMoitieTable   - 10;  
+    yABEF = -y - diff - grossTable-5;                 yCDGH = yABEF+5;
+    profABCD = prof;                                  profEFGH = prof-zinc;
+    
+    obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+    obj.setImageUp(keyboard);
+    obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+    tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+  }
+  
+  //  ========= BASE PC ==========
+  prof = -45;
+  for(int i = 1 ; i <= 4 ; i++) {
+    int x3 = 140;
+    if(i > 1) prof -= 150;
+    zinc = 30;
+    int xBase = -(x/2) + largeurMoitieTable;
+    xPiedADEH = xBase  - x3;               xBCFG = xPiedADEH + 50;  
+    yABEF = -y - diff - grossTable-5;      yCDGH = yABEF+5;
+    profABCD = prof;                       profEFGH = profABCD-zinc;
+    obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+    obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+    tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+  }
+  
+  prof = -45;
+  for(int i = 1 ; i <= 4 ; i++) {
+    int x3 = 120;
+    if(i > 1) prof -= 150;
+    zinc = 30;
+    int xBase = -(x/2) + largeurMoitieTable;
+    xPiedADEH = xBase  - x3;               xBCFG = xPiedADEH + 10;  
+    yABEF = -y - diff - grossTable -5 -15;      yCDGH = yABEF+15;
+    profABCD = prof-10;                       profEFGH = profABCD-10;
+    obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+    obj.setColorR(255); obj.setColorG(255); obj.setColorB(255);
+    tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+  }
+  
+  // Ecran
+  prof = -45;
+  for(int i = 1 ; i <= 4 ; i++) {
+    int x3 = 130;
+    if(i > 1) prof -= 150;
+    zinc = 100;
+    int xBase = -(x/2) + largeurMoitieTable;
+    xPiedADEH = xBase  - x3;               xBCFG = xPiedADEH + 20;  
+    yABEF = -y - diff - grossTable-5 - 15 - 70;      yCDGH = yABEF+70;
+    profABCD = prof+30;                       profEFGH = profABCD-zinc;
+    obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+    obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+    tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+  }
+  
+  prof = -45;
+  for(int i = 1 ; i <= 4 ; i++) {
+    int x3 = 120;
+    if(i > 1) prof -= 150;
+    zinc = 80;
+    int xBase = -(x/2) + largeurMoitieTable;
+    xPiedADEH = xBase  - x3;               xBCFG = xPiedADEH + 12;  
+    yABEF = -y - diff - grossTable-5 - 15 - 60;      yCDGH = yABEF+50;
+    profABCD = prof+20;                       profEFGH = profABCD-zinc; 
+    obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+    obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+    obj.setImageDroite(ubuntuImage);
+    /*obj.setImageDerriere(ubuntuImage);
+    obj.setImageFace(ubuntuImage);
+    obj.setImageUp(ubuntuImage);
+    obj.setImageDown(ubuntuImage);*/
+    tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+  }
+  
   
   
   int profTot = z;
   
   // Chairs
-  int prof = profTot - 40;
-  int x3 = 140, i=0;
-  do {
-    pointA = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2) - y2 , -prof);
-    pointB = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2) - y2 , -prof);
-    pointC = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2)      , -prof);
+  
+  prof = profTot - 40;
+  
+  // Chairs base
+  /*for(int inc = 1; inc <= 4 ; inc++) {
+    int x3 = 140;
+    if(inc > 1) prof = prof - x3;
+    pointA = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2) - grossTable , -prof);
+    pointB = new PVector( - (x/2) + largeurMoitieTable  + 40 , -y - (diff/2) - grossTable , -prof);
+    pointC = new PVector( - (x/2) + largeurMoitieTable  + 40 , -y - (diff/2)      , -prof);
     pointD = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2)      , -prof);
      
-    pointE = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2) - y2 , -prof+90);
-    pointF = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2) - y2 , -prof+90);
-    pointG = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2)      , -prof+90);
+    pointE = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2) - grossTable , -prof+90);
+    pointF = new PVector( - (x/2) + largeurMoitieTable  + 40 , -y - (diff/2) - grossTable , -prof+90);
+    pointG = new PVector( - (x/2) + largeurMoitieTable  + 40 , -y - (diff/2)      , -prof+90);
     pointH = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2)      , -prof+90);
-    obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+    obj = new ObjetTP("Base", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+    obj.setImageFace(chairImage);   obj.setImageUp(chairImage);
+    obj.setImageDown(chairImage);   obj.setImageGauche(chairImage);
+    obj.setImageDroite(chairImage); obj.setImageDerriere(chairImage);
+    tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+  
+    // Chair back
+    for(int j = 1 ; j <= 4 ; j++) {
+        int ytemp = 100, xtemp = x3 + 100;
+        pointA = new PVector( - (x/2) - largeurMoitieTable  + xtemp , -y - (diff/2) - grossTable - ytemp , -prof);
+        pointB = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2) - grossTable    - ytemp , -prof);
+        pointC = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2)    , -prof);
+        pointD = new PVector( - (x/2) - largeurMoitieTable  + xtemp , -y - (diff/2)      , -prof);
+         
+        pointE = new PVector( - (x/2) - largeurMoitieTable  + xtemp , -y - (diff/2) - grossTable - ytemp, -prof+90);
+        pointF = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2) - grossTable - ytemp , -prof+90);
+        pointG = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2)    , -prof+90);
+        pointH = new PVector( - (x/2) - largeurMoitieTable  + xtemp , -y - (diff/2)    , -prof+90);
+        
+        obj = new ObjetTP("Back", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+        obj.setColorR(80); obj.setColorG(74); obj.setColorB(66);        
+        tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+    }
     
-    tab = (PShape[]) append(tab, creerTable(200, 20, 200, floorImage, 7, 10, obj));
-    
-    count = 0;
-      for(int j = 1 ; j <= 4 ; j++)
-          if(j == 0) {
-              xPied1 = x3     ; xPied2 = 50  ;  zPied = -prof + 90 ; zinc = 5;
-          } else if(j == 1) {
-              xPied1 = x3+100 ; xPied2 = -50 ; zPied = -prof + 90 ; zinc = 5;
-          } else if(j == 2) {
-              xPied1 = x3 ; xPied2 = 50 ; zPied = -prof + 10 ; zinc = 5;            
-          }
+    // chair foot
+    for(int j = 1 ; j <= 4 ; j++) {
+          zinc = 5;
+          if(j == 1 || j == 3) { xPied1 = x3     ; xPied2 = 50  ; }
+          if(j == 2 || j == 4) { xPied1 = x3+100 ; xPied2 = -50 ; }
+          if(j == 1 || j == 2) { zPied = -prof + 90 ; }
+          if(j == 3 || j == 4) { zPied = -prof + 10 ; }
           
           pointA = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y - (diff/2) , zPied);
           pointB = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y - (diff/2) , zPied);
@@ -289,29 +395,43 @@ PShape[] createElementsTable(int x, int y, int z) {
           pointG = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y            , zPied- zinc);
           pointH = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y            , zPied- zinc);
           
-          obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-          tab = (PShape[]) append(tab, creerTable(200, 20, 200, tableImage, 7, 10, obj));
-          j++;
-  }
+          obj = new ObjetTP("Foot", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+          obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+          tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
+      }
     
-    
-    i++;
-    prof = prof - 140;
-  } while(i<4);
+  } */
   
   
   return tab;
 }
 
+ObjetTP creerObjects(int xPiedADEH, int xBCFG, int yABEF, int yCDGH, int profABCD, int profEFGH  ) {
+    PVector pointA = new PVector( xPiedADEH , yABEF       , profABCD);
+    PVector pointB = new PVector( xBCFG     , yABEF       , profABCD);
+    PVector pointC = new PVector( xBCFG     , yCDGH       , profABCD);
+    PVector pointD = new PVector( xPiedADEH , yCDGH       , profABCD);
+    
+    PVector pointE = new PVector( xPiedADEH ,  yABEF      , profEFGH);
+    PVector pointF = new PVector( xBCFG     ,  yABEF      , profEFGH);
+    PVector pointG = new PVector( xBCFG     ,  yCDGH      , profEFGH);
+    PVector pointH = new PVector( xPiedADEH ,  yCDGH      , profEFGH);
+    ObjetTP obj = new ObjetTP("Clavier", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+    return obj;
+}
 
-PShape creerTable(float x, float y, float z, PImage img, int xx, int yy, ObjetTP obj) {
-  
+PShape creerTable(ObjetTP obj, int xx, int yy) {
+  //PImage img = floorImage1; 
   PShape group = createShape(GROUP);
-    // Face 1
+    // Face 1 => FACE
     PShape face_1 = createShape();
     face_1.beginShape(QUADS);
     face_1.textureMode(NORMAL);
-    face_1.texture(img);
+    
+    if(obj.getImageFace() != null) { face_1.texture(obj.getImageFace()); } 
+    else { face_1.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
+    
+    //face_1.texture(img);
     face_1.shininess(200);  
     face_1.emissive(0, 0, 0);
     face_1.specular(255, 255, 0);
@@ -341,10 +461,19 @@ PShape creerTable(float x, float y, float z, PImage img, int xx, int yy, ObjetTP
     face_1.endShape(CLOSE);
     group.addChild(face_1);
     
+    
+    // FACE 2 => UP
     PShape face_2 = createShape();
     face_2.beginShape(QUADS);
     face_2.textureMode(NORMAL);
-    face_2.texture(img);
+    
+    if(obj.getImageUp() != null) {
+      System.out.println("Image up");
+      System.out.println(obj.getName());
+      face_2.texture(obj.getImageUp()); 
+  } else { face_2.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
+    
+    //face_2.texture(img);
     face_2.shininess(200.0);  
     face_2.emissive(0, 0, 0);
      face_2.specular(255, 255, 0);
@@ -365,10 +494,15 @@ PShape creerTable(float x, float y, float z, PImage img, int xx, int yy, ObjetTP
     face_2.endShape(CLOSE);
     group.addChild(face_2);
     
+    // FACE 3 => DOWN
     PShape face_3 = createShape();
     face_3.beginShape(QUADS);
     face_3.textureMode(NORMAL);
-    face_3.texture(img);
+    
+    if(obj.getImageDown() != null) { face_3.texture(obj.getImageDown()); } 
+    else { face_3.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
+    
+    //face_3.texture(img);
     face_3.shininess(200.0);  
     face_3.emissive(0, 0, 0);
     face_3.specular(255, 255, 0);
@@ -387,10 +521,15 @@ PShape creerTable(float x, float y, float z, PImage img, int xx, int yy, ObjetTP
     face_3.endShape(CLOSE);
     group.addChild(face_3);
     
+    // FACE 4 => Derriere
     PShape face_4 = createShape();
     face_4.beginShape(QUADS);
     face_4.textureMode(NORMAL);
-    face_4.texture(img);
+    
+    if(obj.getImageDerriere() != null) { face_4.texture(obj.getImageDerriere()); } 
+    else { face_4.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
+    
+    //face_4.texture(img);
     face_4.shininess(200.0);  
     face_4.emissive(0, 0, 0);
      face_4.specular(255, 255, 0);
@@ -403,17 +542,22 @@ PShape creerTable(float x, float y, float z, PImage img, int xx, int yy, ObjetTP
     face_4.normal(PH_n.x, PH_n.y, PH_n.z);
     
     //face_4.stroke(0);
-    creerPointInFigure(face_4, obj.getpointE(), xx, xx); // E
-    creerPointInFigure(face_4, obj.getpointF(), yy,xx); // F
-    creerPointInFigure(face_4, obj.getpointG(), yy, yy); // G
-    creerPointInFigure(face_4, obj.getpointH(), xx, yy); // H
+    creerPointInFigure(face_4, obj.getpointE(), xx, xx);  
+    creerPointInFigure(face_4, obj.getpointF(), yy,xx);   
+    creerPointInFigure(face_4, obj.getpointG(), yy, yy);  
+    creerPointInFigure(face_4, obj.getpointH(), xx, yy);  
     face_4.endShape(CLOSE);
     group.addChild(face_4);
     
+    // Face 5 = Gauche
     PShape face_5 = createShape();
     face_5.beginShape(QUADS);
     face_5.textureMode(NORMAL);
-    face_5.texture(img);
+    
+    if(obj.getImageGauche() != null) { face_5.texture(obj.getImageGauche()); } 
+    else { face_5.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
+    
+    //face_5.texture(img);
     face_5.shininess(200);  
     face_5.emissive(0, 0, 0);
     face_5.specular(255, 255, 0);
@@ -432,10 +576,15 @@ PShape creerTable(float x, float y, float z, PImage img, int xx, int yy, ObjetTP
     face_5.endShape(CLOSE);
     group.addChild(face_5);
     
+    // Face 5 = Droite
     PShape face_6 = createShape();
     face_6.beginShape(QUADS);
     face_6.textureMode(NORMAL);
-    face_6.texture(img);
+    
+    if(obj.getImageDroite() != null) { face_6.texture(obj.getImageDroite());
+    } else { face_6.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
+    
+    //face_6.texture(img);
     face_6.shininess(200.0);  
     face_6.emissive(0, 0, 0);
      face_6.specular(255, 255, 0);
@@ -531,7 +680,7 @@ void creerPointInFigure(PShape figure, PVector p, float u, float v){
 
 boolean increment = true;
 void draw() {
-  int x = 600, y = 10, z = 600;
+  int x = 1000, y = 10, z = 600;
   
   PVector pointA = new PVector( -x, -y, z);
   PVector pointB = new PVector( x, -y, z);
@@ -542,10 +691,20 @@ void draw() {
   PVector pointF = new PVector( x, -y, -z);
   PVector pointG = new PVector( x, y, -z);
   PVector pointH = new PVector( -x, y, -z);
-  ObjetTP obj = new ObjetTP(pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-  PShape floorComp = creerComposite(600, 10, 400, floorImage, 0, 1, obj);
-  
+  ObjetTP obj = new ObjetTP("Floor", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+  //obj.setImageFace(tableImage);
+  obj.setImageUp(floorImage);
+  //PShape floorComp = creerComposite(600, 10, 400, floorImage1, 0, 1, obj);
+  PShape floorComp = creerTable(obj, 0, 1);
+    //PShape floorComp = creerComposite(floorImage, 0, 1, obj);
+
   PShape[] tab = createElementsTable(x, y, z);
+  x = x-800;
+  PShape[] tab2 = createElementsTable(x, y, z);
+  x = x-800;
+  PShape[] tab3 = createElementsTable(x, y, z);
+  x = x-800;
+  PShape[] tab4 = createElementsTable(x, y, z);
   
   if(increment) {
     r++; g++; b++;
@@ -603,6 +762,17 @@ void draw() {
     for(int i = 0; i < tab.length; i++) {
         if (tab[i] != null) {
           shape(tab[i]);
+        }  
+        if (tab2[i] != null) {
+          shape(tab2[i]);
+        }  
+        
+        if (tab3[i] != null) {
+          shape(tab3[i]);
+        }  
+        
+        if (tab4[i] != null) {
+          shape(tab4[i]);
         }  
     }
   
