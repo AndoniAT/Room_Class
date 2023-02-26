@@ -3,7 +3,8 @@
   UNIVERSITÉ DU HAVRE, NORMANDIE
               2023
 */
-
+PShape floorComp;
+PShape[] tab, tab2, tab3, tab4;
 
 float angle = 0f;
 int size = 200; 
@@ -15,6 +16,12 @@ float camY = 0;
 float theta = 0; 
 float zoom = 1500;
 
+// == Camera ==
+float cameraX, cameraY, cameraZ;
+float cameraAngle = 0;
+float rotateX = 0;
+// ===========
+
 float r=0, g=0, b=0;
 
 PImage floorImage, tableImage, chairImage, floorImage1, keyboard, ubuntuImage;
@@ -22,11 +29,13 @@ PShader shaderTexture;
 
 PShader colorShader;
 PVector[] lightPos = { 
-  new PVector(-100, 400, -200),
-  new PVector(200, -200, -100)
+  new PVector(-700, -600, -200),
+  new PVector(0, -600, -100),
+  new PVector(500, -600, -200)
 };
 
 PVector[] lightColor = {
+  new PVector(255, 255, 255),
   new PVector(255, 255, 255),
   new PVector(255, 255, 255)
   /*new PVector(255, 255, 255)*/
@@ -40,23 +49,61 @@ PVector pointE, pointF, pointG, pointH;*/
 
 void setup() {
   size(600, 600, P3D);
+  cameraX = width/2.0;
+  cameraY = height/2.0 - 100;
+  cameraZ = 0;
+  camera(cameraX, cameraY, cameraZ,
+         cameraX, cameraY, cameraZ - 70,
+         0, 1, 0);
+         
+  /*camera(width/2.0, height/2.0, 0, // position
+         width/2.0, height/2.0, -1, // point d'intérêt
+         0, 1, 0); // orientation verticale
+  perspective(PI/3.0, float(width)/float(height), 0.1, 100);
+  
   c = c/2;
+  */
+   
   chairImage = loadImage("chair.jpg");
   floorImage = loadImage("floor.JPG");
   tableImage = loadImage("table.jpg");
   floorImage1 = loadImage("floor1.JPG");
   keyboard = loadImage("keyboard.JPG");
-  ubuntuImage = loadImage("u.JPG");
-  /*ubuntuImage.resize(1, 1);
-  ubuntuImage.save("ub.jpg");*/
-
+  ubuntuImage = loadImage("ubuntu.JPG");
 
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
   
+  // Creation des objets
+  int x = 1000, y = 10, z = 600;
+  
+      PVector pointA = new PVector( -x, -y, z);
+      PVector pointB = new PVector( x, -y, z);
+      PVector pointC = new PVector( x, y, z);
+      PVector pointD = new PVector( -x, y, z);
+      
+      PVector pointE = new PVector( -x, -y, -z);
+      PVector pointF = new PVector( x, -y, -z);
+      PVector pointG = new PVector( x, y, -z);
+      PVector pointH = new PVector( -x, y, -z);
+      ObjetTP obj = new ObjetTP("Floor", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+    
+        //obj.setImageFace(tableImage);
+      obj.setImageUp(floorImage);
+      //PShape floorComp = creerComposite(600, 10, 400, floorImage1, 0, 1, obj);
+      floorComp = creerTable(obj, 0, 1);
+        //PShape floorComp = creerComposite(floorImage, 0, 1, obj);
+    
+      tab = createElementsTable(x, y, z);
+      x = x-800;
+      tab2 = createElementsTable(x, y, z);
+      x = x-800;
+      tab3 = createElementsTable(x, y, z);
+      x = x-800;
+      tab4 = createElementsTable(x, y, z);
+  
   //cube = creerCube(100);
 }
-
 
 PShape creerComposite(PImage img, int xx, int yy, ObjetTP obj) {
   
@@ -323,7 +370,7 @@ PShape[] createElementsTable(int x, int y, int z) {
     yABEF = -y - diff - grossTable-5 - 15 - 60;      yCDGH = yABEF+50;
     profABCD = prof+20;                       profEFGH = profABCD-zinc; 
     obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
-    obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+    obj.setColorR(255); obj.setColorG(0); obj.setColorB(0);
     obj.setImageDroite(ubuntuImage);
     /*obj.setImageDerriere(ubuntuImage);
     obj.setImageFace(ubuntuImage);
@@ -341,19 +388,14 @@ PShape[] createElementsTable(int x, int y, int z) {
   prof = profTot - 40;
   
   // Chairs base
-  /*for(int inc = 1; inc <= 4 ; inc++) {
+  for(int inc = 1; inc <= 4 ; inc++) {
     int x3 = 140;
     if(inc > 1) prof = prof - x3;
-    pointA = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2) - grossTable , -prof);
-    pointB = new PVector( - (x/2) + largeurMoitieTable  + 40 , -y - (diff/2) - grossTable , -prof);
-    pointC = new PVector( - (x/2) + largeurMoitieTable  + 40 , -y - (diff/2)      , -prof);
-    pointD = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2)      , -prof);
-     
-    pointE = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2) - grossTable , -prof+90);
-    pointF = new PVector( - (x/2) + largeurMoitieTable  + 40 , -y - (diff/2) - grossTable , -prof+90);
-    pointG = new PVector( - (x/2) + largeurMoitieTable  + 40 , -y - (diff/2)      , -prof+90);
-    pointH = new PVector( - (x/2) - largeurMoitieTable  + x3 , -y - (diff/2)      , -prof+90);
-    obj = new ObjetTP("Base", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+    
+    xPiedADEH = - (x/2) - largeurMoitieTable  + x3;               xBCFG = - (x/2) + largeurMoitieTable  + 40;  
+    yABEF = -y - (diff/2) - grossTable;      yCDGH = -y - (diff/2);
+    profABCD = -prof;                       profEFGH = profABCD+90; 
+    obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
     obj.setImageFace(chairImage);   obj.setImageUp(chairImage);
     obj.setImageDown(chairImage);   obj.setImageGauche(chairImage);
     obj.setImageDroite(chairImage); obj.setImageDerriere(chairImage);
@@ -362,21 +404,15 @@ PShape[] createElementsTable(int x, int y, int z) {
     // Chair back
     for(int j = 1 ; j <= 4 ; j++) {
         int ytemp = 100, xtemp = x3 + 100;
-        pointA = new PVector( - (x/2) - largeurMoitieTable  + xtemp , -y - (diff/2) - grossTable - ytemp , -prof);
-        pointB = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2) - grossTable    - ytemp , -prof);
-        pointC = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2)    , -prof);
-        pointD = new PVector( - (x/2) - largeurMoitieTable  + xtemp , -y - (diff/2)      , -prof);
-         
-        pointE = new PVector( - (x/2) - largeurMoitieTable  + xtemp , -y - (diff/2) - grossTable - ytemp, -prof+90);
-        pointF = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2) - grossTable - ytemp , -prof+90);
-        pointG = new PVector( - (x/2) + largeurMoitieTable  + 50 , -y - (diff/2)    , -prof+90);
-        pointH = new PVector( - (x/2) - largeurMoitieTable  + xtemp , -y - (diff/2)    , -prof+90);
         
-        obj = new ObjetTP("Back", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+        xPiedADEH = - (x/2) - largeurMoitieTable  + xtemp;               xBCFG = - (x/2) + largeurMoitieTable  + 50;  
+        yABEF = -y - (diff/2) - grossTable - ytemp ;      yCDGH = -y - (diff/2);
+        profABCD = -prof;                       profEFGH = profABCD+90; 
+        obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);    
         obj.setColorR(80); obj.setColorG(74); obj.setColorB(66);        
         tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
     }
-    
+  
     // chair foot
     for(int j = 1 ; j <= 4 ; j++) {
           zinc = 5;
@@ -385,22 +421,15 @@ PShape[] createElementsTable(int x, int y, int z) {
           if(j == 1 || j == 2) { zPied = -prof + 90 ; }
           if(j == 3 || j == 4) { zPied = -prof + 10 ; }
           
-          pointA = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y - (diff/2) , zPied);
-          pointB = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y - (diff/2) , zPied);
-          pointC = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y            , zPied);
-          pointD = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y            , zPied);
-       
-          pointE = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y - (diff/2) , zPied- zinc);
-          pointF = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y - (diff/2) , zPied- zinc);
-          pointG = new PVector( - (x/2) + largeurMoitieTable  - xPied2  , -y            , zPied- zinc);
-          pointH = new PVector( - (x/2) - largeurMoitieTable  + xPied1  , -y            , zPied- zinc);
-          
-          obj = new ObjetTP("Foot", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
+          xPiedADEH = - (x/2) - largeurMoitieTable  + xPied1;               xBCFG = - (x/2) + largeurMoitieTable  - xPied2;  
+          yABEF =  -y - (diff/2);      yCDGH = -y;
+          profABCD = zPied;                       profEFGH = profABCD-zinc; 
+          obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);  
           obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
           tab = (PShape[]) append(tab, creerTable(obj, 7, 10));
       }
     
-  } */
+  } 
   
   
   return tab;
@@ -680,106 +709,130 @@ void creerPointInFigure(PShape figure, PVector p, float u, float v){
 
 boolean increment = true;
 void draw() {
-  int x = 1000, y = 10, z = 600;
-  
-  PVector pointA = new PVector( -x, -y, z);
-  PVector pointB = new PVector( x, -y, z);
-  PVector pointC = new PVector( x, y, z);
-  PVector pointD = new PVector( -x, y, z);
-  
-  PVector pointE = new PVector( -x, -y, -z);
-  PVector pointF = new PVector( x, -y, -z);
-  PVector pointG = new PVector( x, y, -z);
-  PVector pointH = new PVector( -x, y, -z);
-  ObjetTP obj = new ObjetTP("Floor", pointA, pointB, pointC, pointD, pointE, pointF, pointG, pointH);
-  //obj.setImageFace(tableImage);
-  obj.setImageUp(floorImage);
-  //PShape floorComp = creerComposite(600, 10, 400, floorImage1, 0, 1, obj);
-  PShape floorComp = creerTable(obj, 0, 1);
-    //PShape floorComp = creerComposite(floorImage, 0, 1, obj);
-
-  PShape[] tab = createElementsTable(x, y, z);
-  x = x-800;
-  PShape[] tab2 = createElementsTable(x, y, z);
-  x = x-800;
-  PShape[] tab3 = createElementsTable(x, y, z);
-  x = x-800;
-  PShape[] tab4 = createElementsTable(x, y, z);
-  
-  if(increment) {
-    r++; g++; b++;
-  } else {
-    r--; g--; b--;
-  }
-  
-  if(r == 255) increment = false;
-  if(r == 0 ) increment = true;
-  
-  background(color(r, g, b));
-  //stroke(255);
-  //noFill();
-  //fill(140, 0, 80);
-
-  pushMatrix();
-    shader(shaderTexture);
-    textureMode(NORMAL);
-     translate(width/2, height/2, 0);
-     
-      shader(colorShader);
+  background(200, 200, 255);
+  //pushMatrix();
+      if(increment) {
+        r++; g++; b++;
+      } else {
+        r--; g--; b--;
+      }
+      
+      if(r == 255) increment = false;
+      if(r == 0 ) increment = true;
+      
+      background(color(r, g, b));
+      //stroke(255);
+      //noFill();
+      //fill(140, 0, 80);
+      
+        pushMatrix();
+            translate(width/2.0, height/2.0, -200);
+            rotateY(frameCount * 0.02);
+            /*rotateX(frameCount * 0.02);*/
+            fill(255, 255, 0);
+            
+            shader(shaderTexture);
+            textureMode(NORMAL);
+            translate(width/2, height/2, 0);
+            shader(colorShader);
+            ambientLight(10, 10, 10);
     
-    ambientLight(10, 10, 10);
-    
-      for(int i=0; i<lightPos.length; i++) {
-    lightSpecular(lightColor[i].x, lightColor[i].y, lightColor[i].z);
-      pointLight(lightColor[i].x, lightColor[i].y, lightColor[i].z, 
+            for(int i=0; i<lightPos.length; i++) {
+              lightSpecular(lightColor[i].x, lightColor[i].y, lightColor[i].z);
+              pointLight(lightColor[i].x, lightColor[i].y, lightColor[i].z, 
                  lightPos[i].x, lightPos[i].y, lightPos[i].z);
-              
-      }   
+            }   
 
     
-   for(int i=0; i<lightPos.length; i++) {
-      pushMatrix();
-        noStroke();
-        emissive(lightColor[i].x, lightColor[i].y, lightColor[i].z);
-        translate(lightPos[i].x, lightPos[i].y, lightPos[i].z);
-        box(10, 10, 10);
-      popMatrix();
+           for(int i=0; i<lightPos.length; i++) {
+              pushMatrix();
+                noStroke();
+                emissive(lightColor[i].x, lightColor[i].y, lightColor[i].z);
+                translate(lightPos[i].x, lightPos[i].y, lightPos[i].z);
+                box(10, 10, 10);
+              popMatrix();
+            }
+            emissive(0, 0, 0);
+            /*rotateY(angle);
+            rotateX(0.5);*/
+            
+            /*bougerCamera();
+             camera(
+            camX, camY, camZ,
+            0, 0, 0,
+            0, 1, 0);*/
+           
+            //box(size);
+    
+            shape(floorComp);
+    
+            for(int i = 0; i < tab.length; i++) {
+              if (tab[i] != null) {
+                shape(tab[i]);
+              }  
+              if (tab2[i] != null) {
+                shape(tab2[i]);
+              }  
+              
+              if (tab3[i] != null) {
+                shape(tab3[i]);
+              }  
+              
+              if (tab4[i] != null) {
+                shape(tab4[i]);
+              }  
+            }
+
+            popMatrix();
+
+//        popMatrix();
+        updateCamera();
+}
+
+
+
+void updateCamera() {
+  float cameraSpeed = 60.0;
+  float cameraDrag = 0.95;
+
+  // Déplacement de la caméra en fonction des touches enfoncées
+  if (keyPressed) {
+    if (key == 'w') {
+      cameraZ -= cameraSpeed;
+    } else if (key == 's') {
+      cameraZ += cameraSpeed;
+    } else if (key == 'a') {
+      cameraX -= cameraSpeed;
+    } else if (key == 'd') {
+      cameraX += cameraSpeed;
+    } else if (key == 'q') {
+      cameraAngle -= 0.1;
+    } else if (key == 'e') {
+      cameraAngle += 0.1;
     }
-      emissive(0, 0, 0);
-    /*rotateY(angle);
-    rotateX(0.5);*/
-    
-    bougerCamera();
-     camera(
-    camX, camY, camZ,
-    0, 0, 0,
-    0, 1, 0);
-   
-    //box(size);
-    
-    shape(floorComp);
-    
-    for(int i = 0; i < tab.length; i++) {
-        if (tab[i] != null) {
-          shape(tab[i]);
-        }  
-        if (tab2[i] != null) {
-          shape(tab2[i]);
-        }  
-        
-        if (tab3[i] != null) {
-          shape(tab3[i]);
-        }  
-        
-        if (tab4[i] != null) {
-          shape(tab4[i]);
-        }  
-    }
-  
-  popMatrix();
-  //angle += 0.01;
-  /*if(size < 10) size = 200;
-  else size-=30;*/
+  }
+
+  // Déplacement de la caméra en fonction de la position de la souris
+  /*cameraX += (mouseX - cameraX) * cameraDrag;
+  cameraY += (mouseY - cameraY) * cameraDrag;*/
+
+  // Mise à jour de la position de la caméra
+  camera(cameraX, cameraY, cameraZ,
+         cameraX, cameraY, cameraZ - 100,
+         0, 1, 0);
+}
+
+void mouseMoved() {
+  float cameraDrag = 0.95;
+  cameraX += (mouseX - cameraX) * cameraDrag;
+  /*cameraY += (mouseY - cameraY) * cameraDrag;*/
+  /*cameraX += -cameraX * cameraDrag;
+  cameraY += -cameraY * cameraDrag;*/
+  // Mise à jour de la position de la caméra
+  rotateX = frameCount * 0.01;
+  camera(cameraX, cameraY, cameraZ,
+         cameraX, cameraY, cameraZ - 100,
+         0, 1, 0);
 }
 
 
