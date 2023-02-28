@@ -31,6 +31,7 @@ float r=0, g=0, b=0;
 
 PImage floorImage, tableImage, chairImage, floorImage1, keyboard, mureImage, tableauImage, roofImage;
 PImage ubuntuImage, vsStudioImage,  classImage;
+PImage pcBackImage, pcFaceImage;
 PShader shaderTexture;
 
 PShader colorShader;
@@ -86,12 +87,14 @@ void setup() {
   ubuntuImage = loadImage("ubuntu.JPG");
   vsStudioImage = loadImage("vs.JPG");
   classImage = loadImage("classroom.JPG");
+   pcBackImage = loadImage("pcBack.JPG");
+   pcFaceImage = loadImage("pcFace.JPG");
 
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
   
   // Creation des objets
-  int x = 1400, y = 10, z = 600;
+  int x = 1400, y = 10, z = 700;
   
       // == FLO0R ===========
      int xPiedADEH = -x;       int xBCFG = x;  
@@ -174,10 +177,7 @@ PShape[] createElementsTable(int x, int y, int z) {
     xPiedADEH = -largeurMoitieTable - (x/2); xBCFG = largeurMoitieTable - (x/2);  
     yABEF = -y -diff - grossTable;           yCDGH = -y -diff;
     if(i == 1) profABCD = z2;                           profEFGH = -z/2;
-    if(i == 2) profABCD = -z/2;                           profEFGH = -z;
-
-    /*if(i == 2) profABCD = z2;                           profEFGH = -z;*/
-    
+    if(i == 2) profABCD = (-z/2);                           profEFGH = -z;
     obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
     obj.setImageFace(floorImage);   obj.setImageUp(tableImage);     obj.setImageDown(floorImage);
     obj.setImageGauche(floorImage); obj.setImageDroite(floorImage); obj.setImageDerriere(floorImage);
@@ -222,10 +222,14 @@ PShape[] createElementsTable(int x, int y, int z) {
   }
   
   //  ========= BASE PC ==========
-  prof = -45;
+  int profBaseInit = - 20;
+  int sepBase = 170;
+  prof = profBaseInit;
+  
+  //prof = -45;
   for(int i = 1 ; i <= 4 ; i++) {
     int x3 = 140;
-    if(i > 1) prof -= 150;
+    if(i > 1) prof -= sepBase;
     zinc = 30;
     int xBase = -(x/2) + largeurMoitieTable;
     xPiedADEH = xBase  - x3;               xBCFG = xPiedADEH + 50;  
@@ -236,10 +240,11 @@ PShape[] createElementsTable(int x, int y, int z) {
     tab = (PShape[]) append(tab, creerTable(obj, 1, 0));
   }
   
-  prof = -45;
+  //prof = -45;
+  prof = profBaseInit;
   for(int i = 1 ; i <= 4 ; i++) {
     int x3 = 120;
-    if(i > 1) prof -= 150;
+    if(i > 1) prof -= sepBase;
     zinc = 30;
     int xBase = -(x/2) + largeurMoitieTable;
     xPiedADEH = xBase  - x3;               xBCFG = xPiedADEH + 10;  
@@ -251,11 +256,11 @@ PShape[] createElementsTable(int x, int y, int z) {
   }
   
   // Ecran
-  prof = -45;
+  prof = profBaseInit;
   for(int i = 1 ; i <= 4 ; i++) {
     
     int x3 = 130;
-    if(i > 1) prof -= 150;
+    if(i > 1) prof -= sepBase;
     zinc = 100;
     int xBase = -(x/2) + largeurMoitieTable;
     
@@ -286,16 +291,26 @@ PShape[] createElementsTable(int x, int y, int z) {
     
     obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
     tab = (PShape[]) append(tab, creerTable(obj, 1, 0));
+    
+    // Unité
+    zinc = 40;
+    xPiedADEH = xBase  - x3;                          xBCFG = xPiedADEH + 80;  
+    yABEF     = -y - diff - grossTable- 90;           yCDGH = -y - diff - grossTable;
+    profABCD  = prof-90 ;                              profEFGH = profABCD-zinc;
+    
+    obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+    obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+    obj.setImageGauche(pcBackImage); obj.setImageDroite(pcFaceImage);
+    tab = (PShape[]) append(tab, creerTable(obj, 1, 0));
+    
   }
   
-  // ==========
-  //Ecran ubuntu
-  // ==========
+  
   int profTot = z;
   
   // Chairs
   
-  prof = profTot - 40;
+  prof = profTot - 100;
   
   // Chairs base
   for(int inc = 1; inc <= 4 ; inc++) {
@@ -308,9 +323,9 @@ PShape[] createElementsTable(int x, int y, int z) {
       if(!downChair) {
         rotX = 80;
         rotY = 8;
-        transY =  10;
+        transY =  -20;
         transX = int(random(-x, x/2));
-        transZ =-z+200;
+        transZ =-z+300;
         downChair = true;
       }  
     }
@@ -319,7 +334,8 @@ PShape[] createElementsTable(int x, int y, int z) {
   
     // == BASE ==========
     int x3 = 140;
-    if(inc > 1) prof = prof - x3;
+    //int x3 = z/2;
+    if(inc > 1) prof = prof - x3 - 30;
     
     xPiedADEH = - (x/2) - largeurMoitieTable  + x3;               xBCFG = - (x/2) + largeurMoitieTable  + 40;  
     yABEF = -y - (diff/2) - grossTable;      yCDGH = -y - (diff/2);
