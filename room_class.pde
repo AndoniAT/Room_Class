@@ -100,8 +100,6 @@ void setup() {
     
       ObjetTP obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
       obj.setImageUp(floorImage);
-      
-      //floorComp = creerTable(obj, 1, 0);
       objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
       
       // ROOF
@@ -109,9 +107,22 @@ void setup() {
       yABEF = -hauteur - 10;           yCDGH = yABEF+10;
       obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
       obj.setImageDown(roofImage);
-      
-      //floorComp = creerTable(obj, 1, 0);
       objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+      
+      // ===== Mure fenetre ========= 
+        xPiedADEH = x;   xBCFG = x-x/3;  
+        yABEF = -hauteur - 10;           yCDGH = y;
+        profABCD = z;     profEFGH = z+10;
+        obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+        obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
+        objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+      
+        xPiedADEH = x-x/3;   xBCFG = -x;  
+        yABEF = -hauteur/3;           yCDGH = y;
+        profABCD = z;     profEFGH = z+10;
+        obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+        obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
+        objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
       
       // == MUR TABLEAU ==========
       
@@ -144,161 +155,6 @@ void setup() {
   //cube = creerCube(100);
 }
 
-/*PShape creerComposite(PImage img, int xx, int yy, ObjetTP obj) {
-  
-  PShape group = createShape(GROUP);
-    // Face 1
-    PShape face_1 = createShape();
-    face_1.beginShape(QUADS);
-    face_1.textureMode(NORMAL);
-    face_1.texture(img);
-    face_1.shininess(200);  
-    face_1.emissive(0, 0, 0);
-    face_1.specular(255, 255, 0);
-    face_1.ambient(255, 255, 255);
-    
-    //face_1.stroke(0);
-    
-    PVector PA_n = new PVector(obj.getpointA().x, obj.getpointA().y, obj.getpointA().z).normalize();
-    PVector PB_n = new PVector(obj.getpointB().x, obj.getpointB().y, obj.getpointB().z).normalize();
-    PVector PC_n = new PVector(obj.getpointC().x, obj.getpointC().y, obj.getpointC().z).normalize();
-    PVector PD_n = new PVector(obj.getpointD().x, obj.getpointD().y, obj.getpointD().z).normalize();
-    PVector PE_n = new PVector(obj.getpointE().x, obj.getpointE().y, obj.getpointE().z).normalize();
-    PVector PF_n = new PVector(obj.getpointF().x, obj.getpointF().y, obj.getpointF().z).normalize();
-    PVector PG_n = new PVector(obj.getpointG().x, obj.getpointG().y, obj.getpointG().z).normalize();
-    PVector PH_n = new PVector(obj.getpointH().x, obj.getpointH().y, obj.getpointH().z).normalize();
-    
-    //face_1.normal(0, 0, 1);
-    face_1.normal(PA_n.x, PA_n.y, PA_n.z);
-    face_1.normal(PB_n.x, PB_n.y, PB_n.z);
-    face_1.normal(PC_n.x, PC_n.y, PC_n.z);
-    face_1.normal(PD_n.x, PD_n.y, PD_n.z);
-    
-    creerPointInFigure(face_1, obj.getpointA(), xx, xx); // A
-    creerPointInFigure(face_1, obj.getpointB(), yy, xx); // B
-    creerPointInFigure(face_1, obj.getpointC(), yy, yy); // C
-    creerPointInFigure(face_1, obj.getpointD(), xx, yy); // D
-    face_1.endShape(CLOSE);
-    group.addChild(face_1);
-    
-    PShape face_2 = createShape();
-    face_2.beginShape(QUADS);
-    face_2.textureMode(NORMAL);
-    face_2.texture(img);
-    face_2.shininess(200.0);  
-    face_2.emissive(0, 0, 0);
-     face_2.specular(255, 255, 0);
-    face_2.ambient(255, 255, 255);
-    //face_2.normal(0, 0, 1);
-    
-    face_2.normal(PA_n.x, PA_n.y, PA_n.z);
-    face_2.normal(PE_n.x, PE_n.y, PE_n.z);
-    face_2.normal(PF_n.x, PF_n.y, PF_n.z);
-    face_2.normal(PB_n.x, PB_n.y, PB_n.z);
-    
-    //face_2.stroke(0);
-    creerPointInFigure(face_2, obj.getpointA(), xx, xx); // A
-    creerPointInFigure(face_2, obj.getpointE(), yy, xx); // E
-    creerPointInFigure(face_2, obj.getpointF(), yy, yy); // F
-    creerPointInFigure(face_2, obj.getpointB(), xx, yy); // B
-    
-    face_2.endShape(CLOSE);
-    group.addChild(face_2);
-    
-    PShape face_3 = createShape();
-    face_3.beginShape(QUADS);
-    face_3.textureMode(NORMAL);
-    face_3.texture(img);
-    face_3.shininess(200.0);  
-    face_3.emissive(0, 0, 0);
-    face_3.specular(255, 255, 0);
-    face_3.ambient(255, 255, 255);
-    //face_3.normal(0, 0, 1);
-    face_3.normal(PD_n.x, PD_n.y, PD_n.z);
-    face_3.normal(PH_n.x, PH_n.y, PH_n.z);
-    face_3.normal(PG_n.x, PG_n.y, PG_n.z);
-    face_3.normal(PC_n.x, PC_n.y, PC_n.z);
-    
-    //face_3.stroke(0);
-    creerPointInFigure(face_3, obj.getpointD(), xx, xx); // D
-    creerPointInFigure(face_3, obj.getpointH(), yy, xx); // H
-    creerPointInFigure(face_3, obj.getpointG(), yy, yy); // G
-    creerPointInFigure(face_3, obj.getpointC(), xx, yy); // C
-    face_3.endShape(CLOSE);
-    group.addChild(face_3);
-    
-    PShape face_4 = createShape();
-    face_4.beginShape(QUADS);
-    face_4.textureMode(NORMAL);
-    face_4.texture(img);
-    face_4.shininess(200.0);  
-    face_4.emissive(0, 0, 0);
-     face_4.specular(255, 255, 0);
-    face_4.ambient(255, 255, 255);
-    
-    //face_4.normal(0, 0, 1);
-    face_4.normal(PE_n.x, PE_n.y, PE_n.z);
-    face_4.normal(PF_n.x, PF_n.y, PF_n.z);
-    face_4.normal(PG_n.x, PG_n.y, PG_n.z);
-    face_4.normal(PH_n.x, PH_n.y, PH_n.z);
-    
-    //face_4.stroke(0);
-    creerPointInFigure(face_4, obj.getpointE(), xx, xx); // E
-    creerPointInFigure(face_4, obj.getpointF(), yy,xx); // F
-    creerPointInFigure(face_4, obj.getpointG(), yy, yy); // G
-    creerPointInFigure(face_4, obj.getpointH(), xx, yy); // H
-    face_4.endShape(CLOSE);
-    group.addChild(face_4);
-    
-    PShape face_5 = createShape();
-    face_5.beginShape(QUADS);
-    face_5.textureMode(NORMAL);
-    face_5.texture(img);
-    face_5.shininess(200);  
-    face_5.emissive(0, 0, 0);
-    face_5.specular(255, 255, 0);
-    face_5.ambient(255, 255, 255);
-    face_5.normal(0, 0, 1);
-    
-    face_5.normal(PA_n.x, PA_n.y, PA_n.z);
-    face_5.normal(PE_n.x, PE_n.y, PE_n.z);
-    face_5.normal(PH_n.x, PH_n.y, PH_n.z);
-    face_5.normal(PD_n.x, PD_n.y, PD_n.z);
-    //face_5.stroke(0);
-     creerPointInFigure(face_5, obj.getpointA(), xx, xx); // A
-    creerPointInFigure(face_5, obj.getpointE(), yy, xx); // E
-    creerPointInFigure(face_5, obj.getpointH(), yy, yy); // H
-    creerPointInFigure(face_5, obj.getpointD(), xx, yy); // D
-    face_5.endShape(CLOSE);
-    group.addChild(face_5);
-    
-    PShape face_6 = createShape();
-    face_6.beginShape(QUADS);
-    face_6.textureMode(NORMAL);
-    face_6.texture(img);
-    face_6.shininess(200.0);  
-    face_6.emissive(0, 0, 0);
-     face_6.specular(255, 255, 0);
-    face_6.ambient(255, 255, 255);
-    //face_6.normal(0, 0, 1);
-    //face_6.stroke(0);
-    
-    face_6.normal(PB_n.x, PB_n.y, PB_n.z);
-    face_6.normal(PF_n.x, PF_n.y, PF_n.z);
-    face_6.normal(PG_n.x, PG_n.y, PG_n.z);
-    face_6.normal(PC_n.x, PC_n.y, PC_n.z);
-    
-    creerPointInFigure(face_6, obj.getpointB(), xx, xx); // B
-    creerPointInFigure(face_6, obj.getpointF(), yy, xx); // F
-    creerPointInFigure(face_6, obj.getpointG(), yy, yy); // G
-    creerPointInFigure(face_6, obj.getpointC(), xx, yy); // C
-    face_6.endShape(CLOSE);
-    group.addChild(face_6);
-    
-    return group;
-    
-}*/
-
 PShape[] createElementsTable(int x, int y, int z) {
   PShape[] tab = new PShape[10]; // tableau initial avec une taille de 10
   int[] defColors = new int[3];
@@ -328,8 +184,7 @@ PShape[] createElementsTable(int x, int y, int z) {
   
     tab = (PShape[]) append(tab, creerTable(obj, 1, 0));
   }
-  
-  
+    
   // == Pieds Table ==
   int xPied1 = largeurMoitieTable, xPied2 = 25, zPied = z2, zinc = 20;
   for(int j = 1; j <= 4; j++) {    
@@ -427,7 +282,7 @@ PShape[] createElementsTable(int x, int y, int z) {
       case 1 : { obj.setImageDroite(vsStudioImage); break; }
       case 2 : { obj.setImageDroite(classImage); break; }
     }
-    System.out.println("random : " + random);
+    //System.out.println("random : " + random);
     
     obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
     tab = (PShape[]) append(tab, creerTable(obj, 1, 0));
@@ -540,6 +395,7 @@ ObjetTP creerObjects(int xPiedADEH, int xBCFG, int yABEF, int yCDGH, int profABC
 PShape creerTable(ObjetTP obj, int xx, int yy) {
   //PImage img = floorImage1; 
   PShape group = createShape(GROUP);
+  noStroke();
     // Face 1 => FACE
     PShape face_1 = createShape();
     face_1.beginShape(QUADS);
@@ -575,12 +431,9 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     creerPointInFigure(face_1, obj.getpointB(), yy, xx); // B
     creerPointInFigure(face_1, obj.getpointC(), yy, yy); // C
     creerPointInFigure(face_1, obj.getpointD(), xx, yy); // D
+    
+    face_1.noStroke();
     face_1.endShape(CLOSE);
-    
-    /*if(obj.getRotateX()>0) face_1.rotateX(obj.getRotateX());
-    if(obj.getRotateY()>0) face_1.rotateY(obj.getRotateY());
-    if(obj.getRotateZ()>0) face_1.rotateZ(obj.getRotateZ());*/
-    
     group.addChild(face_1);
     
     
@@ -593,12 +446,10 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
       face_2.texture(obj.getImageUp()); 
     } else { face_2.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
     
-    //face_2.texture(img);
     face_2.shininess(200.0);  
     face_2.emissive(0, 0, 0);
      face_2.specular(255, 255, 0);
     face_2.ambient(255, 255, 255);
-    //face_2.normal(0, 0, 1);
     
     face_2.normal(PA_n.x, PA_n.y, PA_n.z);
     face_2.normal(PE_n.x, PE_n.y, PE_n.z);
@@ -611,12 +462,8 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     creerPointInFigure(face_2, obj.getpointF(), yy, yy); // F
     creerPointInFigure(face_2, obj.getpointB(), xx, yy); // B
     
+    face_2.noStroke();
     face_2.endShape(CLOSE);
-    
-    /*if(obj.getRotateX()>0) face_2.rotateX(obj.getRotateX());
-    if(obj.getRotateY()>0) face_2.rotateY(obj.getRotateY());
-    if(obj.getRotateZ()>0) face_2.rotateZ(obj.getRotateZ());*/
-    
     group.addChild(face_2);
     
     // FACE 3 => DOWN
@@ -627,27 +474,22 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     if(obj.getImageDown() != null) { face_3.texture(obj.getImageDown()); } 
     else { face_3.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
     
-    //face_3.texture(img);
     face_3.shininess(200.0);  
     face_3.emissive(0, 0, 0);
     face_3.specular(255, 255, 0);
     face_3.ambient(255, 255, 255);
-    //face_3.normal(0, 0, 1);
+
     face_3.normal(PD_n.x, PD_n.y, PD_n.z);
     face_3.normal(PH_n.x, PH_n.y, PH_n.z);
     face_3.normal(PG_n.x, PG_n.y, PG_n.z);
     face_3.normal(PC_n.x, PC_n.y, PC_n.z);
     
-    //face_3.stroke(0);
     creerPointInFigure(face_3, obj.getpointD(), xx, xx); // D
     creerPointInFigure(face_3, obj.getpointH(), yy, xx); // H
     creerPointInFigure(face_3, obj.getpointG(), yy, yy); // G
     creerPointInFigure(face_3, obj.getpointC(), xx, yy); // C
+    face_3.noStroke();
     face_3.endShape(CLOSE);
-    
-    /*if(obj.getRotateX()>0) face_3.rotateX(obj.getRotateX());
-    if(obj.getRotateY()>0) face_3.rotateY(obj.getRotateY());
-    if(obj.getRotateZ()>0) face_3.rotateZ(obj.getRotateZ());*/
     
     group.addChild(face_3);
     
@@ -676,12 +518,8 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     creerPointInFigure(face_4, obj.getpointF(), yy,xx);   
     creerPointInFigure(face_4, obj.getpointG(), yy, yy);  
     creerPointInFigure(face_4, obj.getpointH(), xx, yy);  
+    face_4.noStroke();
     face_4.endShape(CLOSE);
-    
-    /*if(obj.getRotateX()>0) face_4.rotateX(obj.getRotateX());
-    if(obj.getRotateY()>0) face_4.rotateY(obj.getRotateY());
-    if(obj.getRotateZ()>0) face_4.rotateZ(obj.getRotateZ());*/
-    
     group.addChild(face_4);
     
     // Face 5 = Gauche
@@ -692,7 +530,6 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     if(obj.getImageGauche() != null) { face_5.texture(obj.getImageGauche()); } 
     else { face_5.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
     
-    //face_5.texture(img);
     face_5.shininess(200);  
     face_5.emissive(0, 0, 0);
     face_5.specular(255, 255, 0);
@@ -703,17 +540,12 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     face_5.normal(PE_n.x, PE_n.y, PE_n.z);
     face_5.normal(PH_n.x, PH_n.y, PH_n.z);
     face_5.normal(PD_n.x, PD_n.y, PD_n.z);
-    //face_5.stroke(0);
      creerPointInFigure(face_5, obj.getpointA(), xx, xx); // A
     creerPointInFigure(face_5, obj.getpointE(), yy, xx); // E
     creerPointInFigure(face_5, obj.getpointH(), yy, yy); // H
     creerPointInFigure(face_5, obj.getpointD(), xx, yy); // D
+    face_5.noStroke();
     face_5.endShape(CLOSE);
-    
-    /*if(obj.getRotateX()>0) face_5.rotateX(obj.getRotateX());
-    if(obj.getRotateY()>0) face_5.rotateY(obj.getRotateY());
-    if(obj.getRotateZ()>0) face_5.rotateZ(obj.getRotateZ());*/
-    
     group.addChild(face_5);
     
     // Face 5 = Droite
@@ -742,13 +574,13 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     creerPointInFigure(face_6, obj.getpointG(), yy, yy); // G
     creerPointInFigure(face_6, obj.getpointC(), xx, yy); // C
     face_6.endShape(CLOSE);
-    
+    face_6.noStroke();
     /*if(obj.getRotateX()>0) face_6.rotateX(obj.getRotateX());
     if(obj.getRotateY()>0) face_6.rotateY(obj.getRotateY());
     if(obj.getRotateZ()>0) face_6.rotateZ(obj.getRotateZ());*/
     
     group.addChild(face_6);
-    
+    group.noStroke();    
         
     if(obj.getRotateX()!=0) group.rotateX(obj.getRotateX());
     if(obj.getRotateY()!=0) group.rotateY(obj.getRotateY());
@@ -759,71 +591,6 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     return group;   
 }
 
-/*
-PShape creerCube(int size) {
-  PShape cube = createShape();
-  cube.beginShape(QUADS);
-  cube.textureMode(NORMAL);
-  cube.texture(floorImage);
-  cube.shininess(200.0);
-  cube.emissive(0, 0, 0);
-  cube.normal(0, 0, 1);
-  //cube.tint(color(0, 255, 0));
-  //cube.fill(32, 0, 80);
-  //cube.noFill();
-  cube.stroke(0);
-  
-  // ================================ Face
-  creerPointInFigure(cube, pointA, 0, 0); // A
-  creerPointInFigure(cube, pointB, 1, 0); // B
-  creerPointInFigure(cube, pointC, 1, 1); // C
-  creerPointInFigure(cube, pointD, 0, 1); // D
-  
-  // ================================ HAUT
- // cube.fill(232, 0, 100);
-  //cube.noFill();
-  creerPointInFigure(cube, pointA, 0, 0); // A
-  creerPointInFigure(cube, pointE, 1, 0); // E
-  creerPointInFigure(cube, pointF, 1, 1); // F
-  creerPointInFigure(cube, pointB, 0, 1); // B
-  
-  // ================================ BAS
- //cube.fill(131, 0, 100);
-  //cube.noFill();
-  creerPointInFigure(cube, pointD, 0, 0); // D
-  creerPointInFigure(cube, pointH, 1, 0); // H
-  creerPointInFigure(cube, pointG, 1, 1); // G
-  creerPointInFigure(cube, pointC, 0, 1); // C
-  
-  // ================================ Derriere
-  //cube.fill(64, 99, 41);
-  //cube.noFill();
-  creerPointInFigure(cube, pointE, 0, 0); // E
-  creerPointInFigure(cube, pointF, 1, 0); // F
-  creerPointInFigure(cube, pointG, 1, 1); // G
-  creerPointInFigure(cube, pointH, 0, 1); // H
-  
-    // ================================ Gauche
-  //cube.fill(175, 99, 41);
-  //cube.noFill();
-  creerPointInFigure(cube, pointA, 0, 0); // A
-  creerPointInFigure(cube, pointE, 1, 0); // E
-  creerPointInFigure(cube, pointH, 1, 1); // H
-  creerPointInFigure(cube, pointD, 0, 1); // D
-  
-  // ================================ DROITE
- // cube.fill(2, 207, 188);
-  //cube.noFill();
-  creerPointInFigure(cube, pointB, 0, 0); // B
-  creerPointInFigure(cube, pointF, 1, 0); // F
-  creerPointInFigure(cube, pointG, 1, 1); // G
-  creerPointInFigure(cube, pointC, 0, 1); // C
-  //cube.noFill();
-  
-  cube.endShape(CLOSE);
-  return cube;
-}*/
-
 void creerPointInFigure(PShape figure, PVector p, float u, float v){ 
   figure.vertex( p.x, p.y, p.z, u, v); 
   return;
@@ -831,6 +598,7 @@ void creerPointInFigure(PShape figure, PVector p, float u, float v){
 
 boolean increment = true;
 void draw() {
+  System.out.println(frameCount);
   background(200, 200, 255);
   //pushMatrix();
       if(increment) {
@@ -913,6 +681,21 @@ void draw() {
 
 //        popMatrix();
         updateCamera();
+        lightColor[0].x = lightColor[0].x > 0 ? 0 : 226;
+          lightColor[0].y = lightColor[0].y > 0 ? 0 : 211;
+          lightColor[0].z = lightColor[0].z > 0 ? 0 : 133;
+        
+        if(frameCount%15 ==0) {
+          lightColor[1].x = lightColor[1].x > 0 ? 0 : 226;
+          lightColor[1].y = lightColor[1].y > 0 ? 0 : 211;
+          lightColor[1].z = lightColor[1].z > 0 ? 0 : 133;
+          /*for(int i = 0; i < lightColor.length; i++) {
+          lightColor[i].x = lightColor[i].x > 0 ? 0 : 226;
+          lightColor[i].y = lightColor[i].y > 0 ? 0 : 211;
+          lightColor[i].z = lightColor[i].z > 0 ? 0 : 133;
+          }*/
+        }
+        
 }
 
 
