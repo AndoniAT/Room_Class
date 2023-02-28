@@ -38,7 +38,7 @@ PShader colorShader;
 PVector[] lightPos = { 
   new PVector(-250, 0, 450),
   new PVector(-250, 0, 20),
-  /*new PVector(400, -700, 20),*/
+  new PVector(400, -700, 20),
   
   new PVector(-1400, -700, -300),
 };
@@ -47,7 +47,7 @@ PVector[] lightColor = {
   new PVector(226, 211, 133),
   new PVector(226, 211, 133),
   new PVector(226, 211, 133),
-  /*new PVector(226, 211, 133),*/
+  new PVector(226, 211, 133)
 };
 
 
@@ -306,34 +306,40 @@ PShape[] createElementsTable(int x, int y, int z) {
   int yABEF     = 0; int yCDGH = 0;
   int profABCD  = 0; int profEFGH = 0;
     
+  int xPied1 = largeurMoitieTable, xPied2 = 25, zPied = z2, zinc = 20;
   for(int i = 1 ; i <= 2 ; i++ ) {
     xPiedADEH = -largeurMoitieTable - (x/2); xBCFG = largeurMoitieTable - (x/2);  
     yABEF = -y -diff - grossTable;           yCDGH = -y -diff;
-    if(i == 1) profABCD = z2;                           profEFGH = -z/4;
-    if(i == 2) profABCD = (-z/4)-150;                           profEFGH = -z;
+    if(i == 1) { profABCD = z2;                profEFGH = profABCD + (-z/2) + 10; }
+    if(i > 1) { profABCD = profEFGH - 5;             profEFGH = profEFGH + (-z/2); }
     obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
     obj.setImageFace(floorImage);   obj.setImageUp(tableImage);     obj.setImageDown(floorImage);
     obj.setImageGauche(floorImage); obj.setImageDroite(floorImage); obj.setImageDerriere(floorImage);
   
     tab = (PShape[]) append(tab, creerTable(obj, 1, 0));
+    
+    int xPiedADEHTemp = xPiedADEH; int xBCFGTemp; int yABEFTemp; int yCDGHTemp; int profABCDTemp; int profEFGHTemp; 
+    for(int j = 1; j <= 4; j++) {    
+      if(j == 1 || j == 3) { xPied1 = largeurMoitieTable; xPied2 = 10;   }
+      if(j == 2 || j == 4) { xPied1 = -largeurMoitieTable; xPied2 = -10; }
+      if(j == 1 || j == 2) { zPied = profABCD; zinc = 7;  }
+      if(j == 3 || j == 4) { zPied = profABCD - (z/2) + 10; zinc = -7; }
+      
+      xPiedADEHTemp = -(x/2) - xPied1;  xBCFGTemp = xPiedADEHTemp + xPied2;  
+      yABEFTemp = -y-diff;             yCDGHTemp = -y;
+      profABCDTemp = zPied;            profEFGHTemp = profABCDTemp - zinc;
+      
+      obj = creerObjects(xPiedADEHTemp, xBCFGTemp, yABEFTemp, yCDGHTemp, profABCDTemp, profEFGHTemp);
+      obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+      tab = (PShape[]) append(tab, creerTable(obj, 1, 0));
+    }
   }
+  
     
   // == Pieds Table ==
-  int xPied1 = largeurMoitieTable, xPied2 = 25, zPied = z2, zinc = 20;
-  for(int j = 1; j <= 4; j++) {    
-    if(j == 1 || j == 3) { xPied1 = largeurMoitieTable; xPied2 = 10;   }
-    if(j == 2 || j == 4) { xPied1 = -largeurMoitieTable; xPied2 = -10; }
-    if(j == 1 || j == 2) { zPied = z2; zinc = 7;  }
-    if(j == 3 || j == 4) { zPied = -z; zinc = -7; }
+  
     
-    xPiedADEH = -(x/2) - xPied1;  xBCFG = xPiedADEH + xPied2;  
-    yABEF = -y-diff;             yCDGH = -y;
-    
-    profABCD = zPied;            profEFGH = profABCD - zinc;  
-    obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
-    obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
-    tab = (PShape[]) append(tab, creerTable(obj, 1, 0));
-  }
+ 
   
   int prof = -10;
   // ==== PCs ====
