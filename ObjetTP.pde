@@ -13,6 +13,8 @@ class ObjetTP {
   int translateX = 0;
   int translateY = 0;
   int translateZ = 0;
+  int colorFill =  0;
+  int transFill = 0;
   int[] colors = new int[3];
   String name;
    ObjetTP(String n, PVector pointA, PVector pointB, PVector pointC, PVector pointD,  PVector pointE, PVector pointF, PVector pointG, PVector pointH) {
@@ -135,5 +137,13 @@ class ObjetTP {
  public int getTranslateZ() { return translateZ; }
   
   public void setTranslateZ(int tran) { this.translateZ = tran; }
+  
+  public int getTransFill() { return transFill; }
+  
+  public void setTransFill(int tran) { this.transFill = tran; }
+  
+  public int getColorFill() { return colorFill; }
+  
+  public void setColorFill(int col) { this.colorFill = col; }
  
 }

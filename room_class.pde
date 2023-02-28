@@ -36,12 +36,12 @@ PShader shaderTexture;
 
 PShader colorShader;
 PVector[] lightPos = { 
-  new PVector(-450, -700, -450),
-  new PVector(-450, -700, 20),
-  new PVector(200, -700, 20),
+  new PVector(-250, -700, -450),
+  new PVector(-250, -700, 20),
+  new PVector(400, -700, 20),
   
   new PVector(-1400, -700, -300),
-  new PVector(-1400, -700, 300)
+  /*new PVector(-1400, -700, 300)*/
 };
 
 PVector[] lightColor = {
@@ -49,7 +49,7 @@ PVector[] lightColor = {
   new PVector(226, 211, 133),
   new PVector(226, 211, 133),
   new PVector(226, 211, 133),
-  new PVector(226, 211, 133)
+  /*new PVector(226, 211, 133)*/
 };
 
 
@@ -132,6 +132,15 @@ void setup() {
         obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
         objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
         
+        
+        // fenetre
+        xPiedADEH = x-x/3;   xBCFG = -x+x/3;  
+        yABEF = -hauteur+100;           yCDGH = -hauteur/3;
+        profABCD = z;     profEFGH = z+10;
+        /*obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+        obj.setTransFill(200); obj.setColorFill(255);
+        objets = (PShape[]) append(objets, creerTable(obj, 1, 0));*/
+        
         // up
         xPiedADEH = x-x/3;   xBCFG = -x+x/3;  
         yABEF = -hauteur;           yCDGH = yABEF+(100);
@@ -147,6 +156,92 @@ void setup() {
         obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
         obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
         objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+        
+        
+        // ==== MARCOS ==========
+            // DROITE
+            xPiedADEH = x-x/3+10;   xBCFG = xPiedADEH-40;  
+            yABEF = -hauteur+100;           yCDGH = -hauteur/3;
+            profABCD = z;     profEFGH = profABCD-30;
+            obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+            //obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
+            obj.setColorR(189); obj.setColorG(189); obj.setColorB(189);
+            objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+            
+            // GAUCHE
+            xPiedADEH = -x+x/3;   xBCFG = (-x+x/3)-20; yABEF = -hauteur+100; yCDGH = -hauteur/3; profABCD = z;  profEFGH = z-30;
+            obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+            obj.setColorR(189); obj.setColorG(189); obj.setColorB(189);
+            objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+            
+            // HAUT    
+            xPiedADEH = x-x/3;   xBCFG = -x+x/3; yABEF = -hauteur+100; yCDGH = yABEF+30; profABCD = z;  profEFGH = z-30;
+            obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+            obj.setColorR(189); obj.setColorG(189); obj.setColorB(189);
+            objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+            
+            xPiedADEH = x-x/3;   xBCFG = -x+x/3; yABEF = -hauteur+200; yCDGH = yABEF+10; profABCD = z; profEFGH = z-15;
+            obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+            obj.setColorR(200); obj.setColorG(200); obj.setColorB(200);
+            objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+            
+            int dist = 500;
+            xPiedADEH = -x+x/3;
+            for(int i = 0; i < 3 ; i++) {
+                xPiedADEH +=dist;   xBCFG = xPiedADEH+10; yABEF = -hauteur+100; yCDGH = yABEF+100; profABCD = z; profEFGH = z-15;
+                obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+                obj.setColorR(200); obj.setColorG(200); obj.setColorB(200);
+                objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+                
+                int xPiedADEHTemp = xPiedADEH;
+                xBCFG = xPiedADEHTemp - dist;                   
+                obj = creerObjects(xPiedADEHTemp, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+                obj.setTransFill(100); obj.setColorFill(255);
+                objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+                
+            }
+            xPiedADEH += dist; xBCFG = xPiedADEH - dist;                   
+            obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+            obj.setTransFill(100); obj.setColorFill(255);
+            objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+            
+            dist = 700;
+            xPiedADEH = -x+x/3;
+            for(int i = 0; i < 2 ; i++) {
+                xPiedADEH +=dist;   xBCFG = xPiedADEH+40; yABEF = -hauteur+200; yCDGH =  -hauteur/3; profABCD = z; profEFGH = z-15;
+                obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+                obj.setColorR(200); obj.setColorG(200); obj.setColorB(200);
+                objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+                
+                /*xPiedADEH += dist;*/
+                int xPiedADEHTemp = xPiedADEH-dist;
+                xBCFG = xPiedADEH + 50;  
+                yABEF = -hauteur+200;           yCDGH = -hauteur/3;
+                profABCD = z;     profEFGH = z+10;
+                obj = creerObjects(xPiedADEHTemp, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+                obj.setTransFill(200); obj.setColorFill(255);
+                objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+            }
+            
+            int xPiedADEHTemp = xPiedADEH+250;
+            xBCFG = xPiedADEHTemp -400 ;  
+            yABEF = -hauteur+200;           yCDGH = -hauteur/3;
+            profABCD = z;     profEFGH = z+10;
+            obj = creerObjects(xPiedADEHTemp, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+            obj.setTransFill(200); obj.setColorFill(255);
+            obj.setRotateY(20);
+            obj.setTranslateX(-xBCFG+50);
+            obj.setTranslateZ(z);
+            objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+            
+            
+            
+            // bas
+            xPiedADEH = x-x/3; xBCFG = -x+x/3; yABEF = -hauteur/3; yCDGH = yABEF-10; profABCD = z;     profEFGH = z-30;
+            obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+            obj.setColorR(189); obj.setColorG(189); obj.setColorB(189);
+            objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+            
       
       // == MUR TABLEAU ==========
       
@@ -166,7 +261,24 @@ void setup() {
         obj.setColorR(0); obj.setColorG(0); obj.setColorB(0); 
         objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
         
-        //mureTableau = creerTable(obj, 1, 0);
+      
+       xPiedADEH = x;        xBCFG = xPiedADEH+20;  
+      yABEF = y;            yCDGH = -hauteur;
+      profABCD = -z;      profEFGH = z;
+      obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);      
+      obj.setImageDroite(mureImage);
+      objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+      
+        
+      // MURE DROITE
+        xPiedADEH = x;   xBCFG = -x;  
+        yABEF = -hauteur - 10;           yCDGH = y;
+        profABCD = -z;     profEFGH = profABCD+10;
+        obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+        obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
+        objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+        
+        
       int separation = 800;
       x = x-100;
       
@@ -438,7 +550,10 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     face_1.beginShape(QUADS);
     face_1.textureMode(NORMAL);
     
-    if(obj.getImageFace() != null) { face_1.texture(obj.getImageFace()); } 
+    
+    if(obj.getTransFill() > 0 && obj.getColorFill() > 0) {
+      face_1.setFill(color(obj.getColorFill(), obj.getTransFill()));
+    } else if(obj.getImageFace() != null) { face_1.texture(obj.getImageFace()); } 
     else { face_1.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
     
     //face_1.texture(img);
@@ -478,8 +593,9 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     PShape face_2 = createShape();
     face_2.beginShape(QUADS);
     face_2.textureMode(NORMAL);
-    
-    if(obj.getImageUp() != null) {
+    if(obj.getTransFill() > 0 && obj.getColorFill() > 0) {
+      face_2.setFill(color(obj.getColorFill(), obj.getTransFill()));
+    } else if(obj.getImageUp() != null) {
       face_2.texture(obj.getImageUp()); 
     } else { face_2.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
     
@@ -508,7 +624,9 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     face_3.beginShape(QUADS);
     face_3.textureMode(NORMAL);
     
-    if(obj.getImageDown() != null) { face_3.texture(obj.getImageDown()); } 
+    if(obj.getTransFill() > 0 && obj.getColorFill() > 0) {
+      face_3.setFill(color(obj.getColorFill(), obj.getTransFill()));
+    } else if(obj.getImageDown() != null) { face_3.texture(obj.getImageDown()); } 
     else { face_3.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
     
     face_3.shininess(200.0);  
@@ -535,7 +653,9 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     face_4.beginShape(QUADS);
     face_4.textureMode(NORMAL);
     
-    if(obj.getImageDerriere() != null) { face_4.texture(obj.getImageDerriere()); } 
+    if(obj.getTransFill() > 0 && obj.getColorFill() > 0) {
+      face_4.setFill(color(obj.getColorFill(), obj.getTransFill()));
+    } else if(obj.getImageDerriere() != null) { face_4.texture(obj.getImageDerriere()); } 
     else { face_4.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
     
     //face_4.texture(img);
@@ -564,7 +684,9 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     face_5.beginShape(QUADS);
     face_5.textureMode(NORMAL);
     
-    if(obj.getImageGauche() != null) { face_5.texture(obj.getImageGauche()); } 
+    if(obj.getTransFill() > 0 && obj.getColorFill() > 0) {
+      face_5.setFill(color(obj.getColorFill(), obj.getTransFill()));
+    } else if(obj.getImageGauche() != null) { face_5.texture(obj.getImageGauche()); } 
     else { face_5.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
     
     face_5.shininess(200);  
@@ -590,7 +712,9 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     face_6.beginShape(QUADS);
     face_6.textureMode(NORMAL);
     
-    if(obj.getImageDroite() != null) { face_6.texture(obj.getImageDroite());
+    if(obj.getTransFill() > 0 && obj.getColorFill() > 0) {
+      face_6.setFill(color(obj.getColorFill(), obj.getTransFill()));
+    } else if(obj.getImageDroite() != null) { face_6.texture(obj.getImageDroite());
     } else { face_6.fill(obj.getColorR(), obj.getColorG(), obj.getColorB()); }
     
     //face_6.texture(img);
@@ -623,8 +747,12 @@ PShape creerTable(ObjetTP obj, int xx, int yy) {
     if(obj.getRotateY()!=0) group.rotateY(obj.getRotateY());
     if(obj.getRotateZ()!=0) group.rotateZ(obj.getRotateZ());
     
-    
     group.translate(obj.getTranslateX(), obj.getTranslateY(), obj.getTranslateZ());
+    
+    //obj.setTransFill(100); obj.setColorFill(255);
+    if(obj.getTransFill() > 0 && obj.getColorFill() > 0) {
+      group.setFill(color(obj.getColorFill(), obj.getTransFill()));
+    }
     return group;   
 }
 
@@ -636,6 +764,7 @@ void creerPointInFigure(PShape figure, PVector p, float u, float v){
 boolean increment = true;
 void draw() {
   background(lhImage);
+  
   System.out.println(frameCount);
   /*background(200, 200, 255);*/
   //pushMatrix();
