@@ -4,6 +4,8 @@
               2023
 */
 PShape floorComp, mureTableau, mureFenetre, mureduplicate;
+ObjetTP objScreen;
+int counterScare = 0;
 PShape[] tab, tab2, tab3, tab4, objets = new PShape[10];
 int previousMouseX = 0;
 int countRot = 0;
@@ -31,21 +33,23 @@ float r=0, g=0, b=0;
 
 PImage floorImage, tableImage, chairImage, floorImage1, keyboard, mureImage, tableauImage, roofImage, lhImage;
 PImage ubuntuImage, vsStudioImage,  classImage;
+PImage scareImage, eurekaImage; 
+
 PImage pcBackImage, pcFaceImage;
 PShader shaderTexture;
 
 PShader colorShader;
 PVector[] lightPos = { 
-  new PVector(-250, 0, 450),
-  new PVector(-250, 0, 20),
-  new PVector(400, -700, 20),
+  /*new PVector(-250, 1400, -1850),
+  new PVector(-250, 1400, -1720),*/
+  new PVector(4400, 4700, 2000),
   
-  new PVector(-1400, -700, -300),
+  new PVector(-1400, -1800, -1300),
 };
 
 PVector[] lightColor = {
-  new PVector(226, 211, 133),
-  new PVector(226, 211, 133),
+  /*new PVector(226, 211, 133),
+  new PVector(226, 211, 133),*/
   new PVector(226, 211, 133),
   new PVector(226, 211, 133)
 };
@@ -81,6 +85,8 @@ void setup() {
   mureImage = loadImage("mure.jpg");
   tableauImage = loadImage("tableau.jpg");
   roofImage = loadImage("roof.jpg");
+  scareImage = loadImage("scare.jpg");
+  eurekaImage = loadImage("eureka.JPG");
   
   ubuntuImage = loadImage("ubuntu.JPG");
   vsStudioImage = loadImage("vs.JPG");
@@ -96,7 +102,7 @@ void setup() {
   
   // Creation des objets
   int x = 1400, y = 10, z = 700;
-  
+  int hauteur = 700;
       // == FLO0R ===========
      int xPiedADEH = -x;       int xBCFG = x;  
      int yABEF = -y;           int yCDGH = y;
@@ -106,9 +112,73 @@ void setup() {
       obj.setImageUp(floorImage);
       objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
       
+      // ==== SCREEN ======
+      float rotX = 0; float rotY = 0; float rotZ = 0;
+      rotX = 80;
+      rotY = 20;
+      /*rotZ = 80;*/
+      int transY = 0; int transX =  0 ; int transZ = 0;
+      
+      transY = 0  -y-hauteur/2 - 200;
+      transZ =-z+300;
+      transX = -x + hauteur/2  + 100;
+      /*transZ =-z+300;*/
+      
+       //  ===> SUPORT
+          int grosX = 200; int grosZ = 300;
+          xPiedADEH = -x + 400;    xBCFG    = xPiedADEH + grosX;  
+          yABEF     = -y - 30;     yCDGH    = yABEF - 30;
+          profABCD  = z - grosZ;     profEFGH = profABCD - grosZ;
+        
+          obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+          obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+          obj.setRotateX(rotX); obj.setRotateY(rotY); obj.setRotateZ(rotZ);
+          obj.setTranslateX(transX); obj.setTranslateY(transY); obj.setTranslateZ(transZ);
+          objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+          
+          xPiedADEH  = xPiedADEH + grosX/2;  xBCFG    = xPiedADEH + 20;  
+          yABEF      = yCDGH - hauteur/2;;     yCDGH    = yABEF + hauteur/2;
+          profABCD   = z - grosZ - grosZ/2 + 20;         profEFGH = profABCD - 40; 
+        
+          obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+          obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+          obj.setRotateX(rotX); obj.setRotateY(rotY); obj.setRotateZ(rotZ);
+          obj.setTranslateX(transX); obj.setTranslateY(transY); obj.setTranslateZ(transZ);
+          
+          objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+          
+          // Screen
+          xPiedADEH  += 10;  xBCFG    = xPiedADEH + 10;  
+          yABEF      = yABEF + 250 ;     yCDGH    = yCDGH - hauteur/2 - 100;
+          profABCD  = z - grosZ +100;     profEFGH = profABCD - grosZ - 200; 
+        
+          obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+          obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+          obj.setRotateX(rotX); obj.setRotateY(rotY); obj.setRotateZ(rotZ);
+          obj.setTranslateX(transX); obj.setTranslateY(transY); obj.setTranslateZ(transZ);
+          objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+          
+          xPiedADEH  += 1;  xBCFG    = xPiedADEH + 10;  
+          yABEF      -= 20;     yCDGH    +=20;
+          profABCD  -=20;     profEFGH +=20; 
+          objScreen = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+          objScreen.setColorR(0); obj.setColorG(0); obj.setColorB(0);
+          //objScreen.setImageDroite(lhImage);
+          objScreen.setRotateX(rotX); objScreen.setRotateY(rotY); objScreen.setRotateZ(rotZ);
+          objScreen.setTranslateX(transX); objScreen.setTranslateY(transY); objScreen.setTranslateZ(transZ);
+          //objets = (PShape[]) append(objets, creerTable(objScreen, 1, 0));
+          
+          //PVector p = new PVector(xPiedADEH, yABEF, yCDGH);
+          PVector p = new PVector(objScreen.getpointA().x - 50, objScreen.getpointA().y + 250, objScreen.getpointA().z + 100);
+          lightPos = (PVector[]) append(lightPos, p);
+          PVector c = new PVector(255, 255, 255);
+          lightColor = (PVector[]) append(lightColor, c);
+       // ===========
+      
       // ROOF
-      int hauteur = 700;
+      xPiedADEH = -x;       xBCFG = x;
       yABEF = -hauteur - 10;           yCDGH = yABEF+10;
+      profABCD = z;         profEFGH = -z;
       obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
       obj.setImageDown(roofImage);
       objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
@@ -228,13 +298,11 @@ void setup() {
             yABEF = -hauteur+200;           yCDGH = -hauteur/3;
             profABCD = z;     profEFGH = z+10;
             obj = creerObjects(xPiedADEHTemp, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
-            obj.setTransFill(200); obj.setColorFill(255);
+            obj.setTransFill(100); obj.setColorFill(255);
             obj.setRotateY(20);
             obj.setTranslateX(-xBCFG+50);
             obj.setTranslateZ(z);
             objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
-            
-            
             
             // bas
             xPiedADEH = x-x/3; xBCFG = -x+x/3; yABEF = -hauteur/3; yCDGH = yABEF-10; profABCD = z;     profEFGH = z-30;
@@ -287,6 +355,14 @@ void setup() {
         for(int j = 0; j < tab.length; j++) objets = (PShape[]) append(objets, tab[j]);
         x = x-separation;
       }
+      
+        // SUPPORT
+         xPiedADEH = -x+100;        xBCFG = xPiedADEH+100;  
+        yABEF = y;            yCDGH = -hauteur;
+        profABCD = -z;      profEFGH = -z+100;
+        obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);      
+        obj.setImageDroite(mureImage);
+        objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
       
   //cube = creerCube(100);
 }
@@ -811,7 +887,8 @@ void draw() {
                   noStroke();
                   emissive(lightColor[i].x, lightColor[i].y, lightColor[i].z);
                   translate(lightPos[i].x, lightPos[i].y, lightPos[i].z);
-                box(150, 10, 150);
+                  if(i == lightPos.length - 1) box(10, 10, 10);
+                  else box(150, 10, 150);
                popMatrix(); 
             }
             
@@ -826,6 +903,28 @@ void draw() {
             0, 1, 0);*/
            
             //box(size);
+            pushMatrix();
+            if(counterScare == 0) {
+               if(frameCount % int(random(30, 40)) ==0) {
+                objScreen.setImageDroite(null);
+              } else {
+                objScreen.setImageDroite(eurekaImage);
+              }
+            } 
+            
+            if(frameCount % int(random(100, 110)) ==0 && counterScare == 0) {
+              objScreen.setImageDroite(scareImage);
+              counterScare++;
+            
+            }
+            
+            if(counterScare > 0) {
+              counterScare++;
+              if(counterScare > 10) counterScare = 0;
+            }
+              
+              shape(creerTable(objScreen, 1, 0));
+            popMatrix();
             for(int i = 0 ; i < objets.length ; i++ ) {
               pushMatrix();
               if(objets[i] != null) shape(objets[i]);
@@ -854,15 +953,16 @@ void draw() {
 
 //        popMatrix();
         updateCamera();
-        lightColor[0].x = lightColor[0].x > 0 ? 0 : 226;
-          lightColor[0].y = lightColor[0].y > 0 ? 0 : 211;
-          lightColor[0].z = lightColor[0].z > 0 ? 0 : 133;
         
-        /*if(frameCount%15 ==0) {
-          lightColor[1].x = lightColor[1].x > 0 ? 0 : 226;
-          lightColor[1].y = lightColor[1].y > 0 ? 0 : 211;
-          lightColor[1].z = lightColor[1].z > 0 ? 0 : 133;
-        }*/
+        /*lightColor[0].x = lightColor[0].x > 0 ? 0 : 226;
+          lightColor[0].y = lightColor[0].y > 0 ? 0 : 211;
+          lightColor[0].z = lightColor[0].z > 0 ? 0 : 133;*/
+        
+        if(frameCount% int(random(4, 20)) ==0) {
+          lightColor[2].x = lightColor[2].x > 0 ? 0 : 226;
+          lightColor[2].y = lightColor[2].y > 0 ? 0 : 211;
+          lightColor[2].z = lightColor[2].z > 0 ? 0 : 133;
+        }
         
 }
 
