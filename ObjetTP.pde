@@ -7,6 +7,12 @@ class ObjetTP {
   PImage imageDerriere = null;
   PImage imageGauche = null;
   PImage imageDroite = null;
+  float rotateX = 0.0;
+  float rotateY = 0.0;
+  float rotateZ = 0.0;
+  int translateX = 0;
+  int translateY = 0;
+  int translateZ = 0;
   int[] colors = new int[3];
   String name;
    ObjetTP(String n, PVector pointA, PVector pointB, PVector pointC, PVector pointD,  PVector pointE, PVector pointF, PVector pointG, PVector pointH) {
@@ -105,5 +111,29 @@ class ObjetTP {
   public void setColorB(int x) { colors[2] = x; }
   
   public void setColors(int[] colors) { this.colors = colors; }
+  
+  public float getRotateX() { return rotateX; }
+  
+  public void setRotateX(float rot) { this.rotateX = rot; }
+  
+  public float getRotateY() { return rotateY; }
+  
+  public void setRotateY(float rot) { this.rotateY = rot; }
+  
+  public float getRotateZ() { return rotateZ; }
+  
+  public void setRotateZ(float rot) { this.rotateZ = rot; }
+  
+  public int getTranslateX() { return translateX; }
+  
+  public void setTranslateX(int tran) { this.translateX = tran; }
+  
+  public int getTranslateY() { return translateY; }
+  
+  public void setTranslateY(int tran) { this.translateY = tran; }
+ 
+ public int getTranslateZ() { return translateZ; }
+  
+  public void setTranslateZ(int tran) { this.translateZ = tran; }
  
 }
