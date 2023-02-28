@@ -36,20 +36,18 @@ PShader shaderTexture;
 
 PShader colorShader;
 PVector[] lightPos = { 
-  new PVector(-250, -700, -450),
-  new PVector(-250, -700, 20),
-  new PVector(400, -700, 20),
+  new PVector(-250, 0, 450),
+  new PVector(-250, 0, 20),
+  /*new PVector(400, -700, 20),*/
   
   new PVector(-1400, -700, -300),
-  /*new PVector(-1400, -700, 300)*/
 };
 
 PVector[] lightColor = {
   new PVector(226, 211, 133),
   new PVector(226, 211, 133),
   new PVector(226, 211, 133),
-  new PVector(226, 211, 133),
-  /*new PVector(226, 211, 133)*/
+  /*new PVector(226, 211, 133),*/
 };
 
 
@@ -154,7 +152,9 @@ void setup() {
         yABEF = -hauteur - 10;           yCDGH = y;
         profABCD = z;     profEFGH = z+10;
         obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+        obj.setColorR(255); obj.setColorG(0); obj.setColorB(0);
         obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
+        /*obj.setTransFill(100); obj.setColorFill(255);*/
         objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
         
         
@@ -306,11 +306,11 @@ PShape[] createElementsTable(int x, int y, int z) {
   int yABEF     = 0; int yCDGH = 0;
   int profABCD  = 0; int profEFGH = 0;
     
-  for(int i = 1 ; i <= 1 ; i++ ) {
+  for(int i = 1 ; i <= 2 ; i++ ) {
     xPiedADEH = -largeurMoitieTable - (x/2); xBCFG = largeurMoitieTable - (x/2);  
     yABEF = -y -diff - grossTable;           yCDGH = -y -diff;
-    if(i == 1) profABCD = z2;                           profEFGH = -z/2;
-    if(i == 2) profABCD = (-z/2);                           profEFGH = -z;
+    if(i == 1) profABCD = z2;                           profEFGH = -z/4;
+    if(i == 2) profABCD = (-z/4)-150;                           profEFGH = -z;
     obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
     obj.setImageFace(floorImage);   obj.setImageUp(tableImage);     obj.setImageDown(floorImage);
     obj.setImageGauche(floorImage); obj.setImageDroite(floorImage); obj.setImageDerriere(floorImage);
@@ -398,7 +398,7 @@ PShape[] createElementsTable(int x, int y, int z) {
     int xBase = -(x/2) + largeurMoitieTable;
     
     xPiedADEH = xBase  - x3;                          xBCFG = xPiedADEH + 20;  
-    yABEF     = -y - diff - grossTable -90;           yCDGH = yABEF+70;
+    yABEF = -y - diff - grossTable - 100 + 80 ;                            yCDGH = -y - diff - grossTable - 100;
     profABCD  = prof+30;                              profEFGH = profABCD-zinc;
     
     obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
@@ -409,7 +409,7 @@ PShape[] createElementsTable(int x, int y, int z) {
     zinc = 80;
     
     xPiedADEH+=10;                                   xBCFG = xPiedADEH+12;  
-    yABEF +=10;                                      yCDGH = yABEF+50;
+    yABEF =yABEF-10;                                      yCDGH = yCDGH+10;
     profABCD=prof+20-zinc;                        profEFGH = profABCD+zinc;
     
     obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
@@ -852,16 +852,11 @@ void draw() {
           lightColor[0].y = lightColor[0].y > 0 ? 0 : 211;
           lightColor[0].z = lightColor[0].z > 0 ? 0 : 133;
         
-        if(frameCount%15 ==0) {
+        /*if(frameCount%15 ==0) {
           lightColor[1].x = lightColor[1].x > 0 ? 0 : 226;
           lightColor[1].y = lightColor[1].y > 0 ? 0 : 211;
           lightColor[1].z = lightColor[1].z > 0 ? 0 : 133;
-          /*for(int i = 0; i < lightColor.length; i++) {
-          lightColor[i].x = lightColor[i].x > 0 ? 0 : 226;
-          lightColor[i].y = lightColor[i].y > 0 ? 0 : 211;
-          lightColor[i].z = lightColor[i].z > 0 ? 0 : 133;
-          }*/
-        }
+        }*/
         
 }
 
