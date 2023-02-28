@@ -29,25 +29,27 @@ float rotateX = 0;
 
 float r=0, g=0, b=0;
 
-PImage floorImage, tableImage, chairImage, floorImage1, keyboard, ubuntuImage, mureImage, tableauImage;
+PImage floorImage, tableImage, chairImage, floorImage1, keyboard, ubuntuImage, mureImage, tableauImage, roofImage;
 PShader shaderTexture;
 
 PShader colorShader;
 PVector[] lightPos = { 
-  new PVector(-700, -800, -100),
-  /*new PVector(0, -800, -100),*/
-  /*new PVector(500, -800, -100),*/
-  /*new PVector(-1400, -300, -100),
-  new PVector(-1400, -300, 400)*/
+  new PVector(-450, -700, -450),
+  new PVector(-450, -700, 20),
+  new PVector(200, -700, 20),
+  
+  new PVector(-1400, -700, -300),
+  new PVector(-1400, -700, 300)
 };
 
 PVector[] lightColor = {
-  new PVector(191, 190, 190),
-  /*new PVector(191, 190, 190),*/
-  /*new PVector(191, 190, 190),*/
-  /*new PVector(191, 190, 190),
-  new PVector(191, 190, 190)*/
+  new PVector(226, 211, 133),
+  new PVector(226, 211, 133),
+  new PVector(226, 211, 133),
+  new PVector(226, 211, 133),
+  new PVector(226, 211, 133)
 };
+
 
 // ===========  FLOOR ======================
 PShape cubeFloor;
@@ -63,7 +65,6 @@ void setup() {
   camera(cameraX, cameraY, cameraZ,
          cameraX, cameraY, cameraZ - 70,
          0, 1, 0);
-         
   /*camera(width/2.0, height/2.0, 0, // position
          width/2.0, height/2.0, -1, // point d'intérêt
          0, 1, 0); // orientation verticale
@@ -79,7 +80,8 @@ void setup() {
   keyboard = loadImage("keyboard.JPG");
   ubuntuImage = loadImage("ubuntu.JPG");
   mureImage = loadImage("mure.jpg");
-  tableauImage = loadImage("tableau.JPG");
+  tableauImage = loadImage("tableau.jpg");
+  roofImage = loadImage("roof.jpg");
 
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
@@ -98,22 +100,32 @@ void setup() {
       //floorComp = creerTable(obj, 1, 0);
       objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
       
+      // ROOF
+      int hauteur = 700;
+      yABEF = -hauteur - 10;           yCDGH = yABEF+10;
+      obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+      obj.setImageDown(roofImage);
+      
+      //floorComp = creerTable(obj, 1, 0);
+      objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+      
       // == MUR TABLEAU ==========
-      int hauteur = 500;
+      
       xPiedADEH = -x;        xBCFG = -x+20;  
       yABEF = y;            yCDGH = -hauteur;
       profABCD = -z;      profEFGH = z;
       obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);      
-      obj.setImageDroite(tableauImage);
+      obj.setImageDroite(mureImage);
       objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
       
         // == TABLEAU ==
-      xPiedADEH = -x;        xBCFG = -x+20;  
-      yABEF = y;            yCDGH = -hauteur;
-      profABCD = -z;      profEFGH = z;
-      obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);      
-      obj.setImageDroite(tableauImage);
-      objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+        xPiedADEH +=10;        xBCFG +=10;  
+        yABEF =y - 200;            yCDGH = -hauteur+200;
+        profABCD = profABCD+50;      profEFGH= (profEFGH/2)-100;
+        obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);      
+        obj.setImageDroite(tableauImage);
+        obj.setColorR(0); obj.setColorG(0); obj.setColorB(0); 
+        objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
         
         //mureTableau = creerTable(obj, 1, 0);
       int separation = 800;
@@ -835,22 +847,19 @@ void draw() {
             ambientLight(10, 10, 10);
     
             for(int i=0; i<lightPos.length; i++) {
-              lightSpecular(lightColor[i].x, lightColor[i].y, lightColor[i].z);
-              pointLight(lightColor[i].x, lightColor[i].y, lightColor[i].z, 
+                lightSpecular(lightColor[i].x, lightColor[i].y, lightColor[i].z);
+                pointLight(lightColor[i].x, lightColor[i].y, lightColor[i].z, 
                  lightPos[i].x, lightPos[i].y, lightPos[i].z);
             }   
 
-    
-          pushMatrix();
            for(int i=0; i<lightPos.length; i++) {
-              
-                noStroke();
-                emissive(lightColor[i].x, lightColor[i].y, lightColor[i].z);
-                translate(lightPos[i].x, lightPos[i].y, lightPos[i].z);
-                box(10, 10, 10);
-              
+                pushMatrix();              
+                  noStroke();
+                  emissive(lightColor[i].x, lightColor[i].y, lightColor[i].z);
+                  translate(lightPos[i].x, lightPos[i].y, lightPos[i].z);
+                box(150, 10, 150);
+               popMatrix(); 
             }
-            popMatrix();
             
             emissive(0, 0, 0);
             /*rotateY(angle);
