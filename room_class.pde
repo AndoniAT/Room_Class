@@ -29,7 +29,7 @@ float rotateX = 0;
 
 float r=0, g=0, b=0;
 
-PImage floorImage, tableImage, chairImage, floorImage1, keyboard, mureImage, tableauImage, roofImage;
+PImage floorImage, tableImage, chairImage, floorImage1, keyboard, mureImage, tableauImage, roofImage, lhImage;
 PImage ubuntuImage, vsStudioImage,  classImage;
 PImage pcBackImage, pcFaceImage;
 PShader shaderTexture;
@@ -89,6 +89,9 @@ void setup() {
   classImage = loadImage("classroom.JPG");
    pcBackImage = loadImage("pcBack.JPG");
    pcFaceImage = loadImage("pcFace.JPG");
+   lhImage = loadImage("LH.jpeg");
+     lhImage.resize(600, 600); // redimensionner l'image 
+
 
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
@@ -112,16 +115,34 @@ void setup() {
       obj.setImageDown(roofImage);
       objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
       
-      // ===== Mure fenetre ========= 
+      // ===== Mure fenetre =========
+        // gauche
         xPiedADEH = x;   xBCFG = x-x/3;  
         yABEF = -hauteur - 10;           yCDGH = y;
         profABCD = z;     profEFGH = z+10;
         obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
         obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
         objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
-      
-        xPiedADEH = x-x/3;   xBCFG = -x;  
+        
+        // down
+        xPiedADEH = x-x/3;   xBCFG = -x+x/3;  
         yABEF = -hauteur/3;           yCDGH = y;
+        profABCD = z;     profEFGH = z+10;
+        obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+        obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
+        objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+        
+        // up
+        xPiedADEH = x-x/3;   xBCFG = -x+x/3;  
+        yABEF = -hauteur;           yCDGH = yABEF+(100);
+        profABCD = z;     profEFGH = z+10;
+        obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
+        obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
+        objets = (PShape[]) append(objets, creerTable(obj, 1, 0));
+        
+        // droite
+        xPiedADEH = -x;   xBCFG = -x+x/3;  
+        yABEF = -hauteur - 10;           yCDGH = y;
         profABCD = z;     profEFGH = z+10;
         obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
         obj.setImageFace(mureImage); obj.setImageDerriere(mureImage);
@@ -614,8 +635,9 @@ void creerPointInFigure(PShape figure, PVector p, float u, float v){
 
 boolean increment = true;
 void draw() {
+  background(lhImage);
   System.out.println(frameCount);
-  background(200, 200, 255);
+  /*background(200, 200, 255);*/
   //pushMatrix();
       if(increment) {
         r++; g++; b++;
@@ -626,7 +648,7 @@ void draw() {
       if(r == 255) increment = false;
       if(r == 0 ) increment = true;
       
-      background(color(r, g, b));
+      /*background(color(r, g, b));*/
       //stroke(255);
       //noFill();
       //fill(140, 0, 80);
