@@ -29,7 +29,8 @@ float rotateX = 0;
 
 float r=0, g=0, b=0;
 
-PImage floorImage, tableImage, chairImage, floorImage1, keyboard, ubuntuImage, mureImage, tableauImage, roofImage;
+PImage floorImage, tableImage, chairImage, floorImage1, keyboard, mureImage, tableauImage, roofImage;
+PImage ubuntuImage, vsStudioImage,  classImage;
 PShader shaderTexture;
 
 PShader colorShader;
@@ -78,10 +79,13 @@ void setup() {
   tableImage = loadImage("table.jpg");
   floorImage1 = loadImage("floor1.JPG");
   keyboard = loadImage("keyboard.JPG");
-  ubuntuImage = loadImage("ubuntu.JPG");
   mureImage = loadImage("mure.jpg");
   tableauImage = loadImage("tableau.jpg");
   roofImage = loadImage("roof.jpg");
+  
+  ubuntuImage = loadImage("ubuntu.JPG");
+  vsStudioImage = loadImage("vs.JPG");
+  classImage = loadImage("classroom.JPG");
 
   shaderTexture = loadShader("Lambert1DiffuseFrag.glsl", "lightDifusseeVert.glsl");
   colorShader = loadShader("lightFrag.glsl", "lightVert.glsl");
@@ -394,6 +398,7 @@ PShape[] createElementsTable(int x, int y, int z) {
   // Ecran
   prof = -45;
   for(int i = 1 ; i <= 4 ; i++) {
+    
     int x3 = 130;
     if(i > 1) prof -= 150;
     zinc = 100;
@@ -415,7 +420,15 @@ PShape[] createElementsTable(int x, int y, int z) {
     profABCD=prof+20-zinc;                        profEFGH = profABCD+zinc;
     
     obj = creerObjects(xPiedADEH, xBCFG, yABEF, yCDGH, profABCD, profEFGH);
-      obj.setImageDroite(ubuntuImage);
+    
+    int random = int(random(0, 4));
+    switch(random) {
+      case 0 : { obj.setImageDroite(ubuntuImage); break; }
+      case 1 : { obj.setImageDroite(vsStudioImage); break; }
+      case 2 : { obj.setImageDroite(classImage); break; }
+    }
+    System.out.println("random : " + random);
+    
     obj.setColorR(0); obj.setColorG(0); obj.setColorB(0);
     tab = (PShape[]) append(tab, creerTable(obj, 1, 0));
   }
@@ -441,8 +454,8 @@ PShape[] createElementsTable(int x, int y, int z) {
         rotX = 80;
         rotY = 8;
         transY =  10;
-        transX = -600;
-        transZ =-450;
+        transX = int(random(-x, x/2));
+        transZ =-z+200;
         downChair = true;
       }  
     }
