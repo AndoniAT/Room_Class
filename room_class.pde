@@ -10,6 +10,7 @@ PShape[] tab, tab2, tab3, tab4, objets = new PShape[10];
 int previousMouseX = 0;
 int countRot = 0;
 
+int rainX = 1200; int rainY = 1200; int rainZ = 1000;
 
 boolean downChair = false;
 
@@ -31,7 +32,7 @@ float rotateX = 0;
 
 float r=0, g=0, b=0;
 
-PImage floorImage, tableImage, chairImage, floorImage1, keyboard, mureImage, tableauImage, roofImage, lhImage;
+PImage floorImage, tableImage, chairImage, floorImage1, keyboard, mureImage, tableauImage, roofImage, lhImage, goutteImage;
 PImage ubuntuImage, vsStudioImage,  classImage;
 PImage scareImage, eurekaImage; 
 
@@ -94,6 +95,7 @@ void setup() {
    pcBackImage = loadImage("pcBack.JPG");
    pcFaceImage = loadImage("pcFace.JPG");
    lhImage = loadImage("LH.jpeg");
+   goutteImage = loadImage("goutte.JPG");
      lhImage.resize(600, 600); // redimensionner l'image 
 
 
@@ -892,18 +894,34 @@ void draw() {
                popMatrix(); 
             }
             
-            emissive(0, 0, 0);
-            /*rotateY(angle);
-            rotateX(0.5);*/
+            emissive(0, 0, 0);            
             
-            /*bougerCamera();
-             camera(
-            camX, camY, camZ,
-            0, 0, 0,
-            0, 1, 0);*/
-           
-            //box(size);
+            rainY-=100;
+            int incY = 200;
             pushMatrix();
+              rotateZ(-10);
+            for(int i = 0 ; i < 8 ; i++) {
+              int incYTemp = incY;
+              for(int j = 1 ; j < 20 ; j +=1) {
+                int augment = j*100;
+               pushMatrix();
+                    pushMatrix();
+                    int ran =  int(random(rainY - incY, rainY));
+                     translate(-rainX + augment,ran, rainZ);
+                       image(goutteImage, 0, 0, 15, 15); 
+                    popMatrix();            
+             popMatrix();
+               incY =  incYTemp + int(random(550, 2050));
+             }
+             
+             incY = incYTemp;
+             incY = 200;
+           }
+           popMatrix();
+          noFill();
+          if(rainY < -800) rainY = 1200;
+           
+           pushMatrix();
             if(counterScare == 0) {
                if(frameCount % int(random(30, 40)) ==0) {
                 objScreen.setImageDroite(null);
