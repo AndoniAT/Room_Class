@@ -81,24 +81,24 @@ void setup() {
    c = c/2;
    */
 
-  chairImage = loadImage("chair.jpg");
-  floorImage = loadImage("floor.JPG");
-  tableImage = loadImage("table.jpg");
-  floorImage1 = loadImage("floor1.JPG");
-  keyboard = loadImage("keyboard.JPG");
-  mureImage = loadImage("mure.jpg");
-  tableauImage = loadImage("tableau.png");
-  roofImage = loadImage("roof.jpg");
-  scareImage = loadImage("scare.jpg");
-  eurekaImage = loadImage("eureka.JPG");
-  porteImage = loadImage("porte.JPG");
-  ubuntuImage = loadImage("ubuntu.JPG");
-  vsStudioImage = loadImage("vs.JPG");
-  classImage = loadImage("classroom.JPG");
-  pcBackImage = loadImage("pcBack.JPG");
-  pcFaceImage = loadImage("pcFace.JPG");
-  lhImage = loadImage("LH.jpeg");
-  goutteImage = loadImage("goutte.JPG");
+  chairImage = loadImage("public/images/chair.jpg");
+  floorImage = loadImage("public/images/floor.JPG");
+  tableImage = loadImage("public/images/table.jpg");
+  floorImage1 = loadImage("public/images/floor1.JPG");
+  keyboard = loadImage("public/images/keyboard.JPG");
+  mureImage = loadImage("public/images/mure.jpg");
+  tableauImage = loadImage("public/images/tableau.png");
+  roofImage = loadImage("public/images/roof.jpg");
+  scareImage = loadImage("public/images/scare.jpg");
+  eurekaImage = loadImage("public/images/eureka.JPG");
+  porteImage = loadImage("public/images/porte.JPG");
+  ubuntuImage = loadImage("public/images/ubuntu.JPG");
+  vsStudioImage = loadImage("public/images/vs.JPG");
+  classImage = loadImage("public/images/classroom.JPG");
+  pcBackImage = loadImage("public/images/pcBack.JPG");
+  pcFaceImage = loadImage("public/images/pcFace.JPG");
+  lhImage = loadImage("public/images/LH.jpeg");
+  goutteImage = loadImage("public/images/goutte.JPG");
   lhImage.resize(600, 600); // redimensionner l'image
 
 
